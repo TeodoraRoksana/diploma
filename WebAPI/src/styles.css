@@ -1,0 +1,17 @@
+:root{
+    /* fonts */
+    --text-font: Rubik;
+
+    /* font size */
+
+    /* colors */
+    --background-color: #EEF5FF;
+    --button-color: #B4D4FF;
+    --button-hovering-color: #8EBAF5;
+    --button-click-color: #6BA0E8;
+
+    --text-color: #263C62;
+
+    --border-color: #365486;
+    --border-error-color: #D93939;
+}
