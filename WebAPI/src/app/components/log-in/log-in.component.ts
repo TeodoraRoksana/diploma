@@ -5,10 +5,8 @@ import { UserLogIn } from '../../models/userLogIn';
 
 @Component({
   selector: 'app-log-in',
-  standalone: true,
-  imports: [],
   templateUrl: './log-in.component.html',
-  styleUrl: './log-in.component.css'
+  styleUrls: ['./log-in.component.css'],
 })
 export class LogInComponent {
   userLog = new UserLogIn;
