@@ -1,1 +1,38 @@
-<p>log-in works!</p>
+
+<div class="login">
+    <h1>LOGO</h1>
+    <form>
+        <h2>Log in</h2>
+        <mat-form-field [hideRequiredMarker]="hideRequired" appearance="outline">
+            <mat-label>Login</mat-label>
+            <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher" matInput placeholder="example@example.com">
+            <mat-hint></mat-hint>
+            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                Please enter a valid email address
+            </mat-error>
+            <mat-error *ngIf="emailFormControl.hasError('required')">
+                Email is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Enter your password</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <div class="btns">
+            <button mat-stroked-button type="submit">
+                Log in
+            </button>
+            <button mat-stroked-button class="google-login-btn"></button>
+        </div>
+
+        <div class="links">
+            <a href="/signup" class="signup">Sign up</a>
+            <a href="/forget" class="forget">Forget password?</a>
+        </div>
+    </form>
+</div>
