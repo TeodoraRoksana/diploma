@@ -45,7 +45,11 @@ export class LogInComponent {
   hidePassword = true;
   hideRequired="true";
 
+  
+  // signin: FormGroup = new FormGroup({
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  passwordFormControl = new FormControl('', [Validators.required]);
+  // });
 
   matcher = new MyErrorStateMatcher();
 
@@ -54,5 +58,10 @@ export class LogInComponent {
   logIn(){
 
     this.router.navigate(['/MonthlyPlaning']);
+  }
+
+  userLogIn(){
+    //send to server
+    this.router.navigate(['/monthly-planning']);
   }
 }

@@ -1,0 +1,48 @@
+<div class="menu">
+    <button mat-icon-button matTooltip="Basic" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a heart icon">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <mat-tab-group (click)="$event.stopPropagation()">
+            <mat-tab label="Planning">
+                    <!-- <mat-tree>
+                    <mat-tree-node>
+                        <button mat-menu-item>
+                            <span>Monthly</span>
+                        </button>
+                    </mat-tree-node>
+                    <mat-tree-node>
+                        <button mat-menu-item>
+                            <span>Weekly</span>
+                        </button>
+                    </mat-tree-node>
+                    <mat-tree-node>
+                        <button mat-menu-item>
+                            <span>Daily</span>
+                        </button>
+                    </mat-tree-node>
+                </mat-tree> -->
+                <button mat-menu-item>
+                    <span>Monthly</span>
+                </button>
+                <button mat-menu-item>
+                    <span>Weekly</span>
+                </button>
+                <button mat-menu-item>
+                    <span>Daily</span>
+                </button>
+            </mat-tab>
+            <mat-tab label="Pages">
+                <button mat-menu-item>
+                    <span>Book shelf</span>
+                </button>
+                <button mat-menu-item>
+                    <span>Mood tracker</span>
+                </button>
+            </mat-tab>
+        </mat-tab-group>
+        
+    </mat-menu>
+
+    <h1>LOGO</h1>
+</div>

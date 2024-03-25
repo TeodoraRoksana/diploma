@@ -1,0 +1,10 @@
+.menu{
+    display: flex;
+    width: 150px;
+    gap: 5px;
+    margin: 2%;
+}
+
+h1{
+    margin: 4%;
+}

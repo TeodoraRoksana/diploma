@@ -17,5 +17,16 @@
     --border-color: #365486;
     --border-error-color: #D93939;
 }
+
 html, body { height: 100%; }
-body { margin: 0; font-family: var(--text-font); font-weight: 300; }
+body { 
+    margin: 0; 
+    font-family: var(--text-font); 
+    font-weight: 300; 
+    font-style: var(--text-color);
+    color: var(--text-color);
+}
+
+h1, h2 {
+    font-weight: normal;
+}

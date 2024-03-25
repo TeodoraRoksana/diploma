@@ -12,18 +12,24 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LogInComponent } from './components/log-in/log-in.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MenuComponent } from './components/menu/menu.component';
+import { MonthlyPlanningComponent } from './components/monthly-planning/monthly-planning.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    MonthlyPlanningComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
+
     LogInComponent,
+    MenuComponent,
+
     SocialLoginModule,
   ],
   providers: [
