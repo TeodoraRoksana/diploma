@@ -60,8 +60,10 @@ export class LogInComponent {
     this.router.navigate(['/MonthlyPlaning']);
   }
 
-  userLogIn(){
+  userLogIn(/*e:Event*/){
+    //e.preventDefault();
     //send to server
-    this.router.navigate(['/monthly-planning']);
+    if(!this.emailFormControl.invalid && !this.passwordFormControl.invalid)
+      this.router.navigate(['/monthly-planning']);
   }
 }

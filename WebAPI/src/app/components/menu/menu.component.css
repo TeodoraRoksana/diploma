@@ -1,10 +1,12 @@
 .menu{
     display: flex;
+    align-items: center;
     width: 150px;
     gap: 5px;
-    margin: 2%;
+    padding: .5em;
 }
 
 h1{
-    margin: 4%;
+    margin: 0;
+    line-height: 48px;
 }

@@ -1,0 +1,13 @@
+.week{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+app-day-cell{
+    width: 100%;
+    &:last-child{
+        border-right: 1px solid var(--border-color);
+    }
+    
+}

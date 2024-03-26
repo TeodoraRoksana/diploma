@@ -14,12 +14,13 @@ import { LogInComponent } from './components/log-in/log-in.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MenuComponent } from './components/menu/menu.component';
 import { MonthlyPlanningComponent } from './components/monthly-planning/monthly-planning.component';
+import { DayCellComponent } from './components/monthly-planning/components-for-calendar/day-cell/day-cell.component';
+import { WeekCellComponent } from './components/monthly-planning/components-for-calendar/week-cell/week-cell.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MonthlyPlanningComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,6 +30,9 @@ import { MonthlyPlanningComponent } from './components/monthly-planning/monthly-
 
     LogInComponent,
     MenuComponent,
+    DayCellComponent,
+    WeekCellComponent,
+    MonthlyPlanningComponent,
 
     SocialLoginModule,
   ],

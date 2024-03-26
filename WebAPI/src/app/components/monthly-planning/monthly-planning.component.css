@@ -1,0 +1,9 @@
+app-week-cell:last-child{
+    & .cell{
+        border-bottom: 1px solid var(--border-color);
+    }
+}
+
+.calendar{
+    padding: 0 200px 0 64px;
+}
