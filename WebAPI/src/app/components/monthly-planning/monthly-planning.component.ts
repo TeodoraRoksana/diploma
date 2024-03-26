@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { NgFor } from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
 
 import { Day } from 'src/app/models/day';
 import { MenuComponent } from '../menu/menu.component';
@@ -12,6 +13,7 @@ import { WeekCellComponent } from './components-for-calendar/week-cell/week-cell
   styleUrls: ['./monthly-planning.component.css'],
   standalone: true,
   imports: [
+    MatIconModule,
     MatButtonModule,
     NgFor,
     MenuComponent,

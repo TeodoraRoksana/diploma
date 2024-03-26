@@ -2,6 +2,7 @@
     position: relative;
     width: 100%;
     min-width: 100px;
+    box-sizing: border-box;
     height: 130px;
     border: 1px solid var(--border-color);
     border-right: none;  

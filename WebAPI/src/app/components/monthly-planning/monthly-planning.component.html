@@ -3,8 +3,21 @@
 <app-menu></app-menu>
 
 <div class="calendar">
+    <div class="calendarButtons">
+        <div class="navigateForMonth">
+            <button mat-stroked-button>
+                <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <a>Today</a>
+            <button mat-stroked-button>
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+        </div>
+        <button class="addTask" mat-stroked-button>
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
     <app-week-cell [listOfDays]="daysOfMonthWeek1"></app-week-cell>
-
     <app-week-cell [listOfDays]="daysOfMonthWeek2"></app-week-cell>
     <app-week-cell [listOfDays]="daysOfMonthWeek3"></app-week-cell>
     <app-week-cell [listOfDays]="daysOfMonthWeek4"></app-week-cell>

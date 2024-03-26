@@ -6,6 +6,7 @@
 
 app-day-cell{
     width: 100%;
+    min-width: 100px;
     &:last-child{
         border-right: 1px solid var(--border-color);
     }
