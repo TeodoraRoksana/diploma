@@ -63,7 +63,11 @@ export class LogInComponent {
   userLogIn(/*e:Event*/){
     //e.preventDefault();
     //send to server
-    if(!this.emailFormControl.invalid && !this.passwordFormControl.invalid)
-      this.router.navigate(['/monthly-planning']);
+    if (this.emailFormControl.invalid || this.passwordFormControl.invalid) {
+      return;
+    }
+    
+    this.router.navigate(['/monthly-planning']);
+    console.time('click')
   }
 }

@@ -30,3 +30,23 @@ button{
     transition: opacity ease 0.3s;
 }
 
+.tasks{
+    max-height: calc(100% - 48px);
+    gap: 5px;
+    display: flex;
+    padding: 5px;
+    width: 100%;
+    position: absolute;
+    box-sizing: border-box;
+    top: 48px;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.task{
+    font-weight: 400;
+    cursor: pointer;
+    padding: 2px 10px;
+    border-radius: 8px;
+    background-color: var(--color, #0ff);
+}

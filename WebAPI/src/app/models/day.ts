@@ -1,4 +1,7 @@
+import { Task } from "./task";
+
 export class Day{
-    public numberOfDay = 0;
+    public numberOfDay = new Date;
     //list of task
+    listOfTasks:Task[] = [];
 }

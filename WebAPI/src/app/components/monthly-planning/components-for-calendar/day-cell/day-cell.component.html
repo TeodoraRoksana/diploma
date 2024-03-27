@@ -1,6 +1,12 @@
 <div class="cell">
-    <p> {{numberOfDay}} </p>
+    <p> {{dayData.numberOfDay.getDate()}} </p>
     <button mat-icon-button>
         <mat-icon>add</mat-icon>
     </button>
+
+    <div class="tasks">
+        <div class="task" *ngFor="let task of dayData.listOfTasks">
+            {{task.Name}}
+        </div>
+    </div>
 </div>

@@ -1,0 +1,117 @@
+<div class="newTaskForm">
+    
+    <h2>Add new task</h2>
+    <form>
+        <mat-form-field class="name" [hideRequiredMarker]="hideRequired" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput [formControl]="nameFormControl" [errorStateMatcher]="matcher" [(ngModel)]="taskData.Name" placeholder="Enter name">
+            <mat-hint></mat-hint>
+            <!-- <mat-error *ngIf="nameFormControl.hasError('required')">
+                Name is required!
+            </mat-error> -->
+        </mat-form-field>
+        <div class="modeDate row">
+            <mat-form-field appearance="outline">
+                <mat-label>Select mode</mat-label>
+                <mat-select required [(ngModel)]="selectedMode" name="mode" >
+                <mat-option *ngFor="let mode of modes" [value]="mode.value">
+                    {{mode.viewValue}}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field >
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                <input  [(ngModel)]="taskData.numberOfDay" matStartDate formControlName="start" placeholder="Start date">
+                <input  matEndDate formControlName="end" placeholder="End date">
+                </mat-date-range-input>
+                <mat-hint></mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            
+                <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+            </mat-form-field>
+        </div>
+        <!-- <div>
+            <mat-form-field appearance="outline">
+                <mat-label>MY FIELD</mat-label>
+                <input
+                  type="text"
+                  matInput
+                  [ngxMatTimepicker]="timepicker"
+                  [format]="24"
+                  [required]="required"
+                  readonly
+                  [formControl]="formControlItem"
+                />
+              
+                <mat-icon
+                  matPrefix
+                  *ngIf="formControlItem.value && !formControlItem.disabled && !required"
+                  (click)="onClear($event)"
+                >
+                  close
+                </mat-icon>
+              
+                <mat-icon
+                  matSuffix
+                  *ngIf="!formControlItem.disabled"
+                  (click)="openFromIcon(timepicker)"
+                  >schedule</mat-icon
+                >
+              </mat-form-field>
+              
+              <ngx-mat-timepicker
+                #timepicker
+                [enableKeyboardInput]="true"
+                [max]="maxTime"
+                [min]="minTime"
+              ></ngx-mat-timepicker>
+
+            <mat-checkbox [(ngModel)]="disabled">All day</mat-checkbox>
+        </div> -->
+        
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Tags</mat-label>
+                <mat-chip-grid #chipGrid aria-label="Tag selection">
+                  <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)">
+                    {{tag}}
+                    <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                </mat-chip-grid>
+                <input placeholder="New Tag..." #fruitInput [formControl]="tagsCtrl"
+                  [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+                  (matChipInputTokenEnd)="add($event)"/>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                  <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                    {{tag}}
+                  </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field class="color">
+                <mat-label>Color of tag</mat-label>
+                <input matInput type="color" [(ngModel)]="taskData.colorOfTask" #nameField="ngModel" name="color" (ngValue)="colorOfTag">
+            </mat-form-field>
+        </div>
+
+        <mat-form-field class="note">
+            <mat-label>Note</mat-label>
+            <textarea matInput></textarea>
+        </mat-form-field>
+
+        <div class="btns row">
+            <button mat-stroked-button [mat-dialog-close]="taskData" type="submit">
+                Save
+            </button>
+            <button mat-stroked-button (click)="onNoClick()">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>

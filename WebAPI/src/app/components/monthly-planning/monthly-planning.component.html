@@ -13,14 +13,10 @@
                 <mat-icon>keyboard_arrow_right</mat-icon>
             </button>
         </div>
-        <button class="addTask" mat-stroked-button>
+        <button class="addTask" mat-stroked-button (click)="openDialog(mode)">
             <mat-icon>add</mat-icon>
         </button>
     </div>
-    <app-week-cell [listOfDays]="daysOfMonthWeek1"></app-week-cell>
-    <app-week-cell [listOfDays]="daysOfMonthWeek2"></app-week-cell>
-    <app-week-cell [listOfDays]="daysOfMonthWeek3"></app-week-cell>
-    <app-week-cell [listOfDays]="daysOfMonthWeek4"></app-week-cell>
-    <app-week-cell [listOfDays]="daysOfMonthWeek5"></app-week-cell>
+    <app-week-cell *ngFor="let week of daysOfMonthWeek" [listOfDays]="week"></app-week-cell>
 </div>
 
