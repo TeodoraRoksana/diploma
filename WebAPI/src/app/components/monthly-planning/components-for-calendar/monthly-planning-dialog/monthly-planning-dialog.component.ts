@@ -76,6 +76,10 @@ export class MonthlyPlanningDialogComponent {
   selectedMode = '';
 
   nameFormControl = new FormControl('', [Validators.required]);
+  modeFormControl = new FormControl('', [Validators.required]);
+  dateStartFormControl = new FormControl('', [Validators.required]);
+  dateFinishFormControl = new FormControl('', [Validators.required]);
+
   matcher = new MyErrorStateMatcher();
 
   modes:Modes[] = [
@@ -85,8 +89,8 @@ export class MonthlyPlanningDialogComponent {
   ];
 
   range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
+    start: new FormControl('', [Validators.required]),
+    end: new FormControl('', [Validators.required]),
   });
 
   // disabled = false;
@@ -131,6 +135,8 @@ export class MonthlyPlanningDialogComponent {
       startWith(null),
       map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
     );
+
+    console.timeEnd('dialog');
   }
 
   add(event: MatChipInputEvent): void {
@@ -178,5 +184,22 @@ export class MonthlyPlanningDialogComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+    
+  }
+
+  save(){
+
+    if(
+      [
+        this.nameFormControl,
+        this.modeFormControl,
+        this.dateStartFormControl,
+        this.dateFinishFormControl
+      ]
+      .some(control => control.invalid)
+      )
+      return;
+    console.time('saveTask');
+      this.dialogRef.close(this.taskData);
   }
 }

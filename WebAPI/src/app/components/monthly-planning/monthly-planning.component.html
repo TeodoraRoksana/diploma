@@ -2,8 +2,10 @@
 
 <app-menu></app-menu>
 
+
 <div class="calendar">
     <div class="calendarButtons">
+        <h2>March</h2>
         <div class="navigateForMonth">
             <button mat-stroked-button>
                 <mat-icon>keyboard_arrow_left</mat-icon>
@@ -13,9 +15,12 @@
                 <mat-icon>keyboard_arrow_right</mat-icon>
             </button>
         </div>
-        <button class="addTask" mat-stroked-button (click)="openDialog(mode)">
+        <button class="addTask" mat-stroked-button (click)="openDialog()">
             <mat-icon>add</mat-icon>
         </button>
+    </div>
+    <div class="name-week-days">
+        <div *ngFor="let name of listOfNames">{{name}}</div>
     </div>
     <app-week-cell *ngFor="let week of daysOfMonthWeek" [listOfDays]="week"></app-week-cell>
 </div>

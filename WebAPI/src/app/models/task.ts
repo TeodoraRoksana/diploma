@@ -1,7 +1,8 @@
 export class Task{
     public Name = '';
-    public numberOfDay = new Date;
+    public date = new Date;
     //DateRange
     public colorOfTask = '';
+    public mode = '';
     //else
 }

@@ -1,7 +1,7 @@
 import { Task } from "./task";
 
 export class Day{
-    public numberOfDay = new Date;
+    public date = new Date;
     //list of task
     listOfTasks:Task[] = [];
 }

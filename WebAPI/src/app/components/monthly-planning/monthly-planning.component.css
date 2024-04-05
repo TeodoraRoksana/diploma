@@ -4,6 +4,26 @@ app-week-cell:last-child{
     }
 }
 
+.name-week-days{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    & div{
+        width: 100%;
+        text-align: center;
+        min-width: 100px;
+        font-weight: 400;
+        padding-bottom: 5px;
+    }
+}
+
+h2{
+    text-align: right;
+    margin: 0;
+    width: 100%;
+}
+
 .calendarButtons{
     display: flex;
     align-items: center;

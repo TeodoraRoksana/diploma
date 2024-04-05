@@ -27,14 +27,14 @@ import { Task } from 'src/app/models/task';
 
 export class MonthlyPlanningComponent {
   daysOfMonthWeek:Day[][] = new Array(new Array);
-
-  mode:Date = new Date;
+  listOfNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  
   taskFromDialog = new Task;
 
   constructor(public dialog: MatDialog) {}
 
   ngOnInit() : void{
-    // console.timeEnd('click')
+    console.timeEnd('click');
 
     const list:Day[] = [];
 
@@ -53,7 +53,7 @@ export class MonthlyPlanningComponent {
 
     while(date.getTime() < endDate.getTime()){
       var day = new Day();
-      day.numberOfDay = date;
+      day.date = date;
       list.push(day);
 
       date = new Date(date.getTime() + dayInMs);
@@ -72,12 +72,13 @@ export class MonthlyPlanningComponent {
     }, [])
   }
 
-  openDialog(date: Date): void {
-    let dateForForm = date;
+  openDialog(): void {
+    //let dateForForm = date;
+    console.time('dialog');
     
     const dialogRef = this.dialog.open
     (MonthlyPlanningDialogComponent, {
-      data: {mode: this.mode, date: dateForForm},
+      data: {mode: ''},
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -85,11 +86,13 @@ export class MonthlyPlanningComponent {
       this.taskFromDialog = result;
     
       for (const day of this.daysOfMonthWeek.flat(2)) {
-        if (day.numberOfDay.getTime() == this.taskFromDialog.numberOfDay.getTime()) {
+        if (day.date.getTime() == this.taskFromDialog.date.getTime()) {
           day.listOfTasks.push(this.taskFromDialog);
           break;
         }
       }
+
+    console.timeEnd('saveTask');
     });
   }
 }

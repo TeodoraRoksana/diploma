@@ -68,6 +68,6 @@ export class LogInComponent {
     }
     
     this.router.navigate(['/monthly-planning']);
-    console.time('click')
+    console.time('click');
   }
 }
