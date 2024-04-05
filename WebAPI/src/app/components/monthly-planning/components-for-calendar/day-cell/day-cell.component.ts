@@ -13,13 +13,13 @@ import { MonthlyPlanningDialogComponent } from '../monthly-planning-dialog/month
   selector: 'app-day-cell',
   templateUrl: './day-cell.component.html',
   styleUrls: ['./day-cell.component.css'],
-  standalone: true,
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    NgFor,
-    MatDialogModule,
-  ],
+  // standalone: true,
+  // imports: [
+  //   MatIconModule,
+  //   MatButtonModule,
+  //   NgFor,
+  //   MatDialogModule,
+  // ],
 })
 export class DayCellComponent {
   // numberOfDay = 0;

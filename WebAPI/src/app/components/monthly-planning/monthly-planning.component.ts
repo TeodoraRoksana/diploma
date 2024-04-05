@@ -14,15 +14,15 @@ import { Task } from 'src/app/models/task';
   selector: 'app-monthly-planning',
   templateUrl: './monthly-planning.component.html',
   styleUrls: ['./monthly-planning.component.css'],
-  standalone: true,
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    NgFor,
-    MenuComponent,
-    WeekCellComponent,
-    MatDialogModule,
-  ],
+  // standalone: true,
+  // imports: [
+  //   MatIconModule,
+  //   MatButtonModule,
+  //   NgFor,
+  //   MenuComponent,
+  //   WeekCellComponent,
+  //   MatDialogModule,
+  // ],
 })
 
 export class MonthlyPlanningComponent {

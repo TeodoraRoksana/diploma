@@ -10,12 +10,12 @@ import { Day } from 'src/app/models/day';
   selector: 'app-week-cell',
   templateUrl: './week-cell.component.html',
   styleUrls: ['./week-cell.component.css'],
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    DayCellComponent,
-    NgFor,
-  ],
+  // standalone: true,
+  // imports: [
+  //   MatButtonModule,
+  //   DayCellComponent,
+  //   NgFor,
+  // ],
 })
 export class WeekCellComponent {
   // listOfDays: Day[] = [];

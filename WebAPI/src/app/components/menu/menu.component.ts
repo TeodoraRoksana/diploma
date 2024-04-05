@@ -9,14 +9,14 @@ import { MatTreeModule} from '@angular/material/tree';
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css'],
-  standalone: true,
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatTabsModule,
-    MatTreeModule,
-  ],
+  // standalone: true,
+  // imports: [
+  //   MatIconModule,
+  //   MatButtonModule,
+  //   MatMenuModule,
+  //   MatTabsModule,
+  //   MatTreeModule,
+  // ],
 })
 export class MenuComponent {
   

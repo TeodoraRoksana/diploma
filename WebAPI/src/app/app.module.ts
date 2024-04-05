@@ -1,25 +1,27 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 
-// import {
-//   FormControl,
-//   FormGroupDirective,
-//   NgForm,
-//   Validators,
-//   FormsModule,
-//   ReactiveFormsModule,
-// } from '@angular/forms';
-// import {ErrorStateMatcher} from '@angular/material/core';
-// import {MatInputModule} from '@angular/material/input';
-// import {NgIf} from '@angular/common';
-// import {MatIconModule} from '@angular/material/icon';
-// import {MatButtonModule} from '@angular/material/button';
-
-
+import {
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSelectModule} from '@angular/material/select';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatNativeDateModule} from '@angular/material/core';
 
 import {
   SocialLoginModule,
@@ -39,25 +41,37 @@ import { MonthlyPlanningDialogComponent } from './components/monthly-planning/co
 @NgModule({
   declarations: [
     AppComponent,
-    
+    LogInComponent,
+    MenuComponent,
+    DayCellComponent,
+    WeekCellComponent,
+    MonthlyPlanningDialogComponent,
+    MonthlyPlanningComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    FormsModule, 
+    ReactiveFormsModule, 
+    NgIf, 
+    NgFor,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatInputModule, 
     MatFormFieldModule,
-
-    LogInComponent,
-    MenuComponent,
-    DayCellComponent,
-    WeekCellComponent,
-    MonthlyPlanningComponent,
-    MonthlyPlanningDialogComponent,
+    MatSelectModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    AsyncPipe,
 
     SocialLoginModule,
-
-    
-    
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}

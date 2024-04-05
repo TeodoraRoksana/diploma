@@ -5,14 +5,14 @@ import {
   FormGroupDirective,
   NgForm,
   Validators,
-  FormsModule,
-  ReactiveFormsModule,
+  // FormsModule,
+  // ReactiveFormsModule,
 } from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
-import {MatInputModule} from '@angular/material/input';
-import {NgIf} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+// import {MatInputModule} from '@angular/material/input';
+// import {NgIf} from '@angular/common';
+// import {MatIconModule} from '@angular/material/icon';
+// import {MatButtonModule} from '@angular/material/button';
 
 
 import { UserLogIn } from '../../models/userLogIn';
@@ -30,15 +30,15 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'app-log-in',
   templateUrl: './log-in.component.html',
   styleUrls: ['./log-in.component.css'],
-  standalone: true,
-  imports: [
-    FormsModule, 
-    MatInputModule, 
-    ReactiveFormsModule, 
-    NgIf, 
-    MatIconModule,
-    MatButtonModule,
-  ],
+  // standalone: true,
+  // imports: [
+  //   FormsModule, 
+  //   MatInputModule, 
+  //   ReactiveFormsModule, 
+  //   NgIf, 
+  //   MatIconModule,
+  //   MatButtonModule,
+  // ],
 })
 export class LogInComponent {
   userLog = new UserLogIn;
