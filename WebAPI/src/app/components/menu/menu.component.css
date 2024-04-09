@@ -6,7 +6,42 @@
     padding: .5em;
 }
 
+.button-menu{
+    background-color: var(--button-color);
+}
+
 h1{
     margin: 0;
     line-height: 48px;
+}
+
+
+.tree-icon{ 
+    position: absolute;
+    right: 0;
+}
+
+.tree-planning, .tree-filters{
+    padding-left: 16px;
+
+    /* & button{
+        min-height: 40px;
+    } */
+}
+
+.filters{
+    margin-top: 48px;
+}
+
+.filter-add{
+    font-size: 18px;
+    
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    /* height: 20px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color) !important; 
+    background-color: rgba(97, 235, 139, 0.795);
 }

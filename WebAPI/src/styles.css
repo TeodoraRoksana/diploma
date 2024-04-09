@@ -31,3 +31,19 @@ body {
 h1, h2 {
     font-weight: normal;
 }
+
+.mat-mdc-menu-panel{
+    max-width: none !important;
+    background-color: var(--button-color) !important;
+
+}
+
+.mat-mdc-tab-body-content {
+    height: 500px !important;
+    overflow: hidden !important;
+}
+
+.mdc-tab{
+    padding: 0 48px !important;
+    
+}

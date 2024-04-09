@@ -19,8 +19,17 @@ import { MatTreeModule} from '@angular/material/tree';
   // ],
 })
 export class MenuComponent {
-  
+  showPlanningTree = true;
+  showFilterTree = true;
 
   currentMonth = new Date;
   nameOfMonth = this.currentMonth.getMonth();
+
+  showHidePlanningTree(){
+    this.showPlanningTree = !this.showPlanningTree;
+  }
+
+  showHideFiltersTree(){
+    this.showFilterTree = !this.showFilterTree;
+  }
 }

@@ -1,36 +1,37 @@
 <div class="menu">
-    <button mat-icon-button matTooltip="Basic" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a heart icon">
+    <button class="button-menu" mat-icon-button matTooltip="Basic" [matMenuTriggerFor]="menu">
         <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
         <mat-tab-group (click)="$event.stopPropagation()">
             <mat-tab label="Planning">
-                    <!-- <mat-tree>
-                    <mat-tree-node>
-                        <button mat-menu-item>
-                            <span>Monthly</span>
-                        </button>
-                    </mat-tree-node>
-                    <mat-tree-node>
-                        <button mat-menu-item>
-                            <span>Weekly</span>
-                        </button>
-                    </mat-tree-node>
-                    <mat-tree-node>
-                        <button mat-menu-item>
-                            <span>Daily</span>
-                        </button>
-                    </mat-tree-node>
-                </mat-tree> -->
-                <button mat-menu-item>
-                    <span>Monthly</span>
+                <button mat-menu-item (click)="showHidePlanningTree()">
+                    <span>Planning</span>
+                    <mat-icon class="tree-icon">keyboard_arrow_down</mat-icon>
                 </button>
-                <button mat-menu-item>
-                    <span>Weekly</span>
+                <div class="tree-planning" *ngIf="showPlanningTree">
+                    <button mat-menu-item>
+                        <span>Monthly</span>
+                    </button>
+                    <button mat-menu-item>
+                        <span>Weekly</span>
+                    </button>
+                    <button mat-menu-item>
+                        <span>Daily</span>
+                    </button>
+                </div>
+
+                <button class="filters" mat-menu-item (click)="showHideFiltersTree()">
+                    <span>Filters</span>
+                    <mat-icon class="tree-icon">keyboard_arrow_down</mat-icon>
                 </button>
-                <button mat-menu-item>
-                    <span>Daily</span>
-                </button>
+                <div class="tree-filters" *ngIf="showFilterTree">
+                    <button mat-menu-item>
+                        <mat-icon class="filter-add">add</mat-icon>
+                        <span>Name</span>
+                    </button>
+                </div>
+
             </mat-tab>
             <mat-tab label="Pages">
                 <button mat-menu-item>
