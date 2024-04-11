@@ -10,8 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ContentCreatorDBContex>(options => options.UseSqlServer(
+builder.Services.AddDbContext<DiplomaDBContext>(options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DiplomaDBConnection")));
+
 
 var app = builder.Build();
 

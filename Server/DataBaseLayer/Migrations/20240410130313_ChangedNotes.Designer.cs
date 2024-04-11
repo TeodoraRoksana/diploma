@@ -4,25 +4,28 @@ using DataBaseLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DataBaseLayer.migrations
+namespace DataBaseLayer.Migrations
 {
-    [DbContext(typeof(ContentCreatorDBContex))]
-    partial class ContentCreatorDBContexModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DiplomaDBContext))]
+    [Migration("20240410130313_ChangedNotes")]
+    partial class ChangedNotes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.17")
+                .HasAnnotation("ProductVersion", "7.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Server.Models.DailyNotes", b =>
+            modelBuilder.Entity("DataBaseLayer.Models.TypeOfNotes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,21 +33,13 @@ namespace DataBaseLayer.migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Text")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("DailyNotes");
+                    b.ToTable("TypeOfNotes");
                 });
 
             modelBuilder.Entity("Server.Models.FilterNames", b =>
@@ -71,6 +66,39 @@ namespace DataBaseLayer.migrations
                     b.HasIndex("Tasks_FilterNamesId");
 
                     b.ToTable("FilterNames");
+                });
+
+            modelBuilder.Entity("Server.Models.Notes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeOfNotesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeOfNotesId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("Server.Models.Tasks", b =>
@@ -182,47 +210,30 @@ namespace DataBaseLayer.migrations
                     b.ToTable("UsersPasswords");
                 });
 
-            modelBuilder.Entity("Server.Models.WeeklyNotes", b =>
+            modelBuilder.Entity("Server.Models.FilterNames", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("WeeklyNotes");
+                    b.HasOne("Server.Models.Tasks_FilterNames", null)
+                        .WithMany("FilterNames")
+                        .HasForeignKey("Tasks_FilterNamesId");
                 });
 
-            modelBuilder.Entity("Server.Models.DailyNotes", b =>
+            modelBuilder.Entity("Server.Models.Notes", b =>
                 {
+                    b.HasOne("DataBaseLayer.Models.TypeOfNotes", "TypeOfNotes")
+                        .WithMany()
+                        .HasForeignKey("TypeOfNotesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Server.Models.Users", "User")
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
-                });
+                    b.Navigation("TypeOfNotes");
 
-            modelBuilder.Entity("Server.Models.FilterNames", b =>
-                {
-                    b.HasOne("Server.Models.Tasks_FilterNames", null)
-                        .WithMany("FilterNames")
-                        .HasForeignKey("Tasks_FilterNamesId");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Server.Models.Tasks", b =>
@@ -252,17 +263,6 @@ namespace DataBaseLayer.migrations
                     b.HasOne("Server.Models.Users", "User")
                         .WithOne("Password")
                         .HasForeignKey("Server.Models.UsersPasswords", "UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Server.Models.WeeklyNotes", b =>
-                {
-                    b.HasOne("Server.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

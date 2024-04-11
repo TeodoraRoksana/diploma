@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DataBaseLayer.migrations
+namespace DataBaseLayer.Migrations
 {
-    [DbContext(typeof(ContentCreatorDBContex))]
-    [Migration("20240409113320_initial")]
+    [DbContext(typeof(DiplomaDBContext))]
+    [Migration("20240410124948_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace DataBaseLayer.migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.17")
+                .HasAnnotation("ProductVersion", "7.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -205,6 +205,8 @@ namespace DataBaseLayer.migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UsersId");
+
                     b.ToTable("WeeklyNotes");
                 });
 
@@ -253,6 +255,17 @@ namespace DataBaseLayer.migrations
                     b.HasOne("Server.Models.Users", "User")
                         .WithOne("Password")
                         .HasForeignKey("Server.Models.UsersPasswords", "UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Server.Models.WeeklyNotes", b =>
+                {
+                    b.HasOne("Server.Models.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
