@@ -4,10 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{7F5D99FD-D19F-4E3E-B481-E2428D20CA4E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{997A55DB-B55D-452B-9004-5A14C41B8206} = {997A55DB-B55D-452B-9004-5A14C41B8206}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBaseLayer", "DataBaseLayer\DataBaseLayer.csproj", "{1D9A35EF-321C-41B8-A75B-235A90941BB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{997A55DB-B55D-452B-9004-5A14C41B8206}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{997A55DB-B55D-452B-9004-5A14C41B8206}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

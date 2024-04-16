@@ -4,6 +4,7 @@ using DataBaseLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBaseLayer.Migrations
 {
     [DbContext(typeof(DiplomaDBContext))]
-    partial class DiplomaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240416152812_AddedUserToFilter2")]
+    partial class AddedUserToFilter2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +58,10 @@ namespace DataBaseLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("UsersId")
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Users_Id")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -216,9 +222,7 @@ namespace DataBaseLayer.Migrations
                 {
                     b.HasOne("Server.Models.Users", null)
                         .WithMany("FilterNames")
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsersId");
                 });
 
             modelBuilder.Entity("Server.Models.Notes", b =>

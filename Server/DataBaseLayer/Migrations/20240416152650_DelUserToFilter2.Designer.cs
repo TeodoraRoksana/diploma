@@ -4,6 +4,7 @@ using DataBaseLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBaseLayer.Migrations
 {
     [DbContext(typeof(DiplomaDBContext))]
-    partial class DiplomaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240416152650_DelUserToFilter2")]
+    partial class DelUserToFilter2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,15 +58,10 @@ namespace DataBaseLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("UsersId");
 
                     b.ToTable("FilterNames");
                 });
@@ -212,15 +210,6 @@ namespace DataBaseLayer.Migrations
                     b.ToTable("UsersPasswords");
                 });
 
-            modelBuilder.Entity("Server.Models.FilterNames", b =>
-                {
-                    b.HasOne("Server.Models.Users", null)
-                        .WithMany("FilterNames")
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Server.Models.Notes", b =>
                 {
                     b.HasOne("DataBaseLayer.Models.TypeOfNotes", "TypeOfNotes")
@@ -288,8 +277,6 @@ namespace DataBaseLayer.Migrations
 
             modelBuilder.Entity("Server.Models.Users", b =>
                 {
-                    b.Navigation("FilterNames");
-
                     b.Navigation("Password");
                 });
 #pragma warning restore 612, 618

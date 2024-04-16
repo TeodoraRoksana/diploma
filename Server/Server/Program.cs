@@ -1,5 +1,7 @@
 using DataBaseLayer;
 using Microsoft.EntityFrameworkCore;
+using Services.DBServices;
+using Services.DBServices.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DiplomaDBContext>(options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DiplomaDBConnection")));
-
+builder.Services.AddScoped<IUsersDBService, UsersDBService>();
+builder.Services.AddScoped<ITasksDBService, TasksDBService>();
+builder.Services.AddScoped<ITasks_FilterNamesService, Tasks_FilterNamesService>();
+builder.Services.AddScoped<IFilterNamesService, FilterNamesService>();
 
 var app = builder.Build();
 

@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Server.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Server.Models
+namespace DataBaseLayer.Models.DTO
 {
-    public class Tasks
+    public class TasksDTO
     {
-        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime BeginDate { get; set; }
@@ -16,8 +20,6 @@ namespace Server.Models
         public int BoolIsImportant { get; set; }
         public int BoolTimeSelected { get; set; }
 
-        public Users? User { get; set; }
-        public List<Tasks_FilterNames> Tasks_FilterNames { get; set; }
-
+        public List<FilterNames> FilterNames { get; set; }
     }
 }

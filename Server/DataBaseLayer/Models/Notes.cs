@@ -1,9 +1,11 @@
 ﻿using DataBaseLayer.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models
 {
     public class Notes
     {
+        [Key]
         public int Id { get; set; }
         public int UsersId { get; set; }
         public DateTime Date { get; set; }
