@@ -22,10 +22,7 @@ namespace Services.DBServices
 
         public async Task<Users> GetUserByEmail(string email)
         {
-            var user = (await _dbContext.Users.Where(u => u.Email == email).FirstAsync());
-
-            if(user == null)
-                throw new Exception($"no {typeof(Users).Name} with email = {email}");
+            var user = (await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == email));
 
             return user;
         }
@@ -40,14 +37,14 @@ namespace Services.DBServices
             return user;
         }
 
-        public async Task<List<Users>> PostUser(Users user)
+        public async Task<Users> PostUser(Users user)
         {
             try
             {
                 await _dbContext.Users.AddAsync(user);
 
                 await _dbContext.SaveChangesAsync();
-                return await GetAllUsers();
+                return user;
             }
             catch (Exception ex)
             {

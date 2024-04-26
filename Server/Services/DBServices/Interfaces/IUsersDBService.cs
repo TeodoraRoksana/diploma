@@ -12,7 +12,7 @@ namespace Services.DBServices.Interfaces
         public Task<List<Users>> GetAllUsers();
         public Task<Users> GetUserById(int id);
         public Task<Users> GetUserByEmail(string email);
-        public Task<List<Users>> PostUser(Users user);
+        public Task<Users> PostUser(Users user);
         public Task<Users> PutUser(Users user);
         public Task DeleteUserById(int id);
     }

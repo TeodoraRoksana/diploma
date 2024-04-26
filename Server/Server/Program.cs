@@ -1,7 +1,11 @@
 using DataBaseLayer;
+using DataBaseLayer.Models.DTO;
+using DataBaseLayer.Models.Mapper;
 using Microsoft.EntityFrameworkCore;
+using Server.Models;
 using Services.DBServices;
 using Services.DBServices.Interfaces;
+using Services.HashService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +22,9 @@ builder.Services.AddScoped<IUsersDBService, UsersDBService>();
 builder.Services.AddScoped<ITasksDBService, TasksDBService>();
 builder.Services.AddScoped<ITasks_FilterNamesService, Tasks_FilterNamesService>();
 builder.Services.AddScoped<IFilterNamesService, FilterNamesService>();
+builder.Services.AddScoped<IHashService, HashService>();
+builder.Services.AddScoped<IMapper<Users, RegistrationDTO>, UserRegistrationMapper>();
+builder.Services.AddScoped<IUsersPasswordSaltDBService, UsersPasswordSaltDBService>();
 
 var app = builder.Build();
 

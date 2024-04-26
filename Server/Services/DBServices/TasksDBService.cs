@@ -1,5 +1,6 @@
 ﻿using DataBaseLayer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Server.Models;
 using Services.DBServices.Interfaces;
 using System;
@@ -129,7 +130,7 @@ namespace Services.DBServices
 
                 var filter_names = task.Tasks_FilterNames;
                 //for one filter
-                if (oldtask.Tasks_FilterNames[0].FilterNames != task.Tasks_FilterNames[0].FilterNames)
+                if (oldtask.Tasks_FilterNames.IsNullOrEmpty() || oldtask.Tasks_FilterNames[0].FilterNames != task.Tasks_FilterNames[0].FilterNames)
                 {
                     //task.Tasks_FilterNames[0].FilterNames = null;
                     _dbContext.Tasks_FilterNames.Remove(oldtask.Tasks_FilterNames[0]);

@@ -14,7 +14,7 @@ namespace DataBaseLayer
         public DiplomaDBContext(DbContextOptions<DiplomaDBContext> options) : base(options) { }
 
         public DbSet<Users> Users { get; set; }
-        public DbSet<UsersPasswords> UsersPasswords { get; set; }
+        public DbSet<UsersPasswordSalt> UsersPasswordSalt { get; set; }
         public DbSet<Tasks> Tasks { get; set; }
         public DbSet<Tasks_FilterNames> Tasks_FilterNames { get; set; }
         public DbSet<FilterNames> FilterNames { get; set; }

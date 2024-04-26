@@ -8,8 +8,8 @@ namespace Server.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-
-        public UsersPasswords? Password { get; set; }
-        public List<FilterNames>? FilterNames { get; set; }
+        public string HashPassword { get; set; }
+        public UsersPasswordSalt? Salt { get; set; }
+        public List<FilterNames> FilterNames { get; set; }
     }
 }

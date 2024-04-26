@@ -4,6 +4,7 @@ using DataBaseLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBaseLayer.Migrations
 {
     [DbContext(typeof(DiplomaDBContext))]
-    partial class DiplomaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240425123500_RemoveIsUniqueForFilretName")]
+    partial class RemoveIsUniqueForFilretName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace DataBaseLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeOfNotes", (string)null);
+                    b.ToTable("TypeOfNotes");
                 });
 
             modelBuilder.Entity("Server.Models.FilterNames", b =>
@@ -62,7 +65,7 @@ namespace DataBaseLayer.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("FilterNames", (string)null);
+                    b.ToTable("FilterNames");
                 });
 
             modelBuilder.Entity("Server.Models.Notes", b =>
@@ -95,7 +98,7 @@ namespace DataBaseLayer.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("Notes", (string)null);
+                    b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("Server.Models.Tasks", b =>
@@ -139,7 +142,7 @@ namespace DataBaseLayer.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("Server.Models.Tasks_FilterNames", b =>
@@ -162,7 +165,7 @@ namespace DataBaseLayer.Migrations
 
                     b.HasIndex("TasksId");
 
-                    b.ToTable("Tasks_FilterNames", (string)null);
+                    b.ToTable("Tasks_FilterNames");
                 });
 
             modelBuilder.Entity("Server.Models.Users", b =>
@@ -177,20 +180,16 @@ namespace DataBaseLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("HashPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Server.Models.UsersPasswordSalt", b =>
+            modelBuilder.Entity("Server.Models.UsersPasswords", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -198,9 +197,9 @@ namespace DataBaseLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte[]>("Salt")
+                    b.Property<string>("HashPassword")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsersId")
                         .HasColumnType("int");
@@ -210,7 +209,7 @@ namespace DataBaseLayer.Migrations
                     b.HasIndex("UsersId")
                         .IsUnique();
 
-                    b.ToTable("UsersPasswordSalt", (string)null);
+                    b.ToTable("UsersPasswords");
                 });
 
             modelBuilder.Entity("Server.Models.FilterNames", b =>
@@ -271,13 +270,15 @@ namespace DataBaseLayer.Migrations
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("Server.Models.UsersPasswordSalt", b =>
+            modelBuilder.Entity("Server.Models.UsersPasswords", b =>
                 {
-                    b.HasOne("Server.Models.Users", null)
-                        .WithOne("Salt")
-                        .HasForeignKey("Server.Models.UsersPasswordSalt", "UsersId")
+                    b.HasOne("Server.Models.Users", "User")
+                        .WithOne("Password")
+                        .HasForeignKey("Server.Models.UsersPasswords", "UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Server.Models.Tasks", b =>
@@ -289,8 +290,7 @@ namespace DataBaseLayer.Migrations
                 {
                     b.Navigation("FilterNames");
 
-                    b.Navigation("Salt")
-                        .IsRequired();
+                    b.Navigation("Password");
                 });
 #pragma warning restore 612, 618
         }
