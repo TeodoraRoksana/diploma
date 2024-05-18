@@ -18,6 +18,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DiplomaDBContext>(options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("DiplomaDBConnection")));
+
+builder.Services.AddCors(options => options.AddPolicy(name: "DiplomaOrigins",
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+    }));
+
 builder.Services.AddScoped<IUsersDBService, UsersDBService>();
 builder.Services.AddScoped<ITasksDBService, TasksDBService>();
 builder.Services.AddScoped<ITasks_FilterNamesService, Tasks_FilterNamesService>();
@@ -34,6 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("DiplomaOrigins");
 
 app.UseHttpsRedirection();
 

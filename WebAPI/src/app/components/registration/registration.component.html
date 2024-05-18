@@ -1,0 +1,65 @@
+
+<div class="registration">
+    <h1>LOGO</h1>
+    <form>
+        <h2>Sign up</h2>
+            
+        <button mat-stroked-button class="google-login-btn"></button>
+
+        <div class="separator-or">
+            <mat-divider></mat-divider>
+            <span>OR</span>
+            <mat-divider></mat-divider>
+        </div>
+
+        <mat-form-field [hideRequiredMarker]="hideRequired" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input type="text" [(ngModel)]="userSignUp.name" matInput [formControl]="nameFormControl" [errorStateMatcher]="matcher" matInput>
+            <mat-hint></mat-hint>
+            <mat-error *ngIf="nameFormControl.hasError('minlength') && !nameFormControl.hasError('required')">
+                Name should contain 3 characters
+            </mat-error>
+            <mat-error *ngIf="nameFormControl.hasError('required')">
+                Name is required!
+            </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field [hideRequiredMarker]="hideRequired" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input type="email" [(ngModel)]="userSignUp.login" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher" matInput placeholder="example@example.com">
+            <mat-hint></mat-hint>
+            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                Please enter a valid email address
+            </mat-error>
+            <mat-error *ngIf="emailFormControl.hasError('required')">
+                Email is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [hideRequiredMarker]="true">
+            <mat-label>Password</mat-label>
+            <input matInput [(ngModel)]="userSignUp.password" [formControl]="passwordFormControl" [errorStateMatcher]="matcher" [type]="hidePassword ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+
+            <mat-hint></mat-hint>
+            <mat-error *ngIf="passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required')">
+                Password should contain 8 characters
+            </mat-error>
+            <mat-error *ngIf="passwordFormControl.hasError('required')">
+                Password is required!
+            </mat-error>
+        </mat-form-field>
+
+        <div class="btns">
+            <button mat-stroked-button (click)="signUp()" type="submit">
+                Sign up
+            </button>
+        </div>
+
+        <div class="links">
+            <span>Already have account? <a href="/" class="signup">Log in</a></span>
+        </div>
+    </form>
+</div>

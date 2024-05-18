@@ -5,7 +5,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
-
+import { HttpClientModule } from '@angular/common/http';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -22,6 +22,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatNativeDateModule} from '@angular/material/core';
+import {MatDividerModule} from '@angular/material/divider';
 
 import {
   SocialLoginModule,
@@ -36,6 +37,7 @@ import { MonthlyPlanningComponent } from './components/monthly-planning/monthly-
 import { DayCellComponent } from './components/monthly-planning/components-for-calendar/day-cell/day-cell.component';
 import { WeekCellComponent } from './components/monthly-planning/components-for-calendar/week-cell/week-cell.component';
 import { MonthlyPlanningDialogComponent } from './components/monthly-planning/components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 
 
 @NgModule({
@@ -47,6 +49,7 @@ import { MonthlyPlanningDialogComponent } from './components/monthly-planning/co
     WeekCellComponent,
     MonthlyPlanningDialogComponent,
     MonthlyPlanningComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,7 @@ import { MonthlyPlanningDialogComponent } from './components/monthly-planning/co
     ReactiveFormsModule, 
     NgIf, 
     NgFor,
+    HttpClientModule,
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
@@ -70,6 +74,7 @@ import { MonthlyPlanningDialogComponent } from './components/monthly-planning/co
     MatChipsModule,
     MatAutocompleteModule,
     AsyncPipe,
+    MatDividerModule,
 
     SocialLoginModule,
   ],

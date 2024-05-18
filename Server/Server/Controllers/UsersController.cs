@@ -56,7 +56,8 @@ namespace Server.Controllers
                 var user = await _usersDBService.GetUserByEmail(userLogInDTO.Email);
 
                 if (user == null)
-                    throw new Exception("User with this email does not exist!");
+                    //throw new Exception("User with this email does not exist!");
+                    return NotFound("User with this email does not exist!");
 
                 var salt = await _usersPasswordSaltDBService.GetSaltByUserIdAsync(user.Id);
 

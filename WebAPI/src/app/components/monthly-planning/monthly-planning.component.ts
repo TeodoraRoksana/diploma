@@ -26,40 +26,44 @@ import { Task } from 'src/app/models/task';
 })
 
 export class MonthlyPlanningComponent {
-  daysOfMonthWeek:Day[][] = new Array(new Array);
+  dayInMs = 86_400_000;
+
+  daysOfMonthWeek: Day[][] = new Array(new Array);
   listOfNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   
   taskFromDialog = new Task;
 
+  currentDate = new Date(Date.now())
+  year = this.currentDate.getFullYear()
+  month = this.currentDate.getMonth()
+
+  monthName = this.currentDate.toLocaleString('en-US', { month: 'long' })
+
   constructor(public dialog: MatDialog) {}
 
   ngOnInit() : void{
-    console.timeEnd('click');
+    this.daysOfMonthWeek = this.getMonth(this.year, this.month);
+  }
 
-    const list:Day[] = [];
+  getMonth(year: number, month: number): Day[][] {
+    const list: Day[] = [];
 
-    const dayInMs = 86_400_000;
+    let date = new Date(year, month, 1);
+    const offset = ((date.getDay() + 6) % 7);
+    let day = 1 - offset
+    date = new Date(year, month, day);
 
-    const targetYear = 2024;
-    const targetMonth = 2;
-
-    let date = new Date(targetYear, targetMonth, 1);
-    const offset = ((date.getDay() + 6) % 7) * dayInMs
-    date = new Date(date.getTime() - offset);
-
-    let endDate = new Date(targetYear, targetMonth + 1, 1)
-    const offset2 = ((8 - endDate.getDay()) % 7) * dayInMs
-    endDate = new Date(endDate.getTime() + offset2);
+    let endDate = new Date(year, month + 1, 1);
+    const offset2 = ((8 - endDate.getDay()) % 7);
+    endDate = new Date(year, month + 1, 1 + offset2);
 
     while(date.getTime() < endDate.getTime()){
-      var day = new Day();
-      day.date = date;
-      list.push(day);
+      list.push(new Day(date));
 
-      date = new Date(date.getTime() + dayInMs);
+      date = new Date(year, month, ++day);
     }
 
-    this.daysOfMonthWeek = list.reduce<Day[][]>((resultArray, item, index) => { 
+    return list.reduce<Day[][]>((resultArray, item, index) => { 
       const chunkIndex = Math.floor(index/7)
     
       if(!resultArray[chunkIndex]) {
@@ -70,6 +74,24 @@ export class MonthlyPlanningComponent {
     
       return resultArray
     }, [])
+  }
+
+  nextMonth(dir: number) {
+    this.month += dir
+
+    this.currentDate = new Date(this.year, this.month)
+    this.monthName = this.currentDate.toLocaleString('en-US', { month: 'long' })
+    
+    this.daysOfMonthWeek = this.getMonth(this.year, this.month);
+  }
+
+  today() {
+    this.currentDate = new Date(Date.now())
+    this.year = this.currentDate.getFullYear()
+    this.month = this.currentDate.getMonth()
+    this.monthName = this.currentDate.toLocaleString('en-US', { month: 'long' })
+    
+    this.daysOfMonthWeek = this.getMonth(this.year, this.month);
   }
 
   openDialog(): void {

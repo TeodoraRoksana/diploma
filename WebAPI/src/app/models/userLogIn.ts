@@ -1,4 +1,4 @@
 export class UserLogIn{
-    login = "";
+    email = "";
     password = "";
 }
