@@ -7,11 +7,16 @@
     border: 1px solid var(--border-color);
     border-right: none;  
     border-bottom: none;
+    background: white;
 
     &:hover{
         button{
             opacity: 1;
         }
+    }
+
+    &.greyed {
+        background-color: #e3e3e3;
     }
 }
 

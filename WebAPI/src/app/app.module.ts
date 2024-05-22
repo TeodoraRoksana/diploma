@@ -38,7 +38,7 @@ import { DayCellComponent } from './components/monthly-planning/components-for-c
 import { WeekCellComponent } from './components/monthly-planning/components-for-calendar/week-cell/week-cell.component';
 import { MonthlyPlanningDialogComponent } from './components/monthly-planning/components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-
+import { DailyPlanningComponent } from './components/daily-planning/daily-planning.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +50,7 @@ import { RegistrationComponent } from './components/registration/registration.co
     MonthlyPlanningDialogComponent,
     MonthlyPlanningComponent,
     RegistrationComponent,
+    DailyPlanningComponent,
   ],
   imports: [
     BrowserModule,

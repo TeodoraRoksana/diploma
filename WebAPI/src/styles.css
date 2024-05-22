@@ -25,7 +25,7 @@ body {
     font-weight: 300; 
     font-style: var(--text-color);
     color: var(--text-color);
-    
+    background: var(--background-color);
 }
 
 h1, h2 {
@@ -40,10 +40,16 @@ h1, h2 {
 
 .mat-mdc-tab-body-content {
     height: 500px !important;
+    width: 250px !important;
     overflow: hidden !important;
 }
 
 .mdc-tab{
     padding: 0 48px !important;
     
+}
+
+.mat-mdc-text-field-wrapper,
+.google-login-btn {
+    background-color: white !important;
 }

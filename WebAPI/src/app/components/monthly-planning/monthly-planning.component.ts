@@ -37,7 +37,7 @@ export class MonthlyPlanningComponent {
   year = this.currentDate.getFullYear()
   month = this.currentDate.getMonth()
 
-  monthName = this.currentDate.toLocaleString('en-US', { month: 'long' })
+  monthName = this.formatMonthView()
 
   constructor(public dialog: MatDialog) {}
 
@@ -58,7 +58,9 @@ export class MonthlyPlanningComponent {
     endDate = new Date(year, month + 1, 1 + offset2);
 
     while(date.getTime() < endDate.getTime()){
-      list.push(new Day(date));
+      const greyed = this.fit(this.month, 12) !== date.getMonth()
+      
+      list.push(new Day(date, greyed));
 
       date = new Date(year, month, ++day);
     }
@@ -80,7 +82,8 @@ export class MonthlyPlanningComponent {
     this.month += dir
 
     this.currentDate = new Date(this.year, this.month)
-    this.monthName = this.currentDate.toLocaleString('en-US', { month: 'long' })
+
+    this.monthName = this.formatMonthView()
     
     this.daysOfMonthWeek = this.getMonth(this.year, this.month);
   }
@@ -89,9 +92,18 @@ export class MonthlyPlanningComponent {
     this.currentDate = new Date(Date.now())
     this.year = this.currentDate.getFullYear()
     this.month = this.currentDate.getMonth()
-    this.monthName = this.currentDate.toLocaleString('en-US', { month: 'long' })
+    this.monthName = this.formatMonthView()
     
     this.daysOfMonthWeek = this.getMonth(this.year, this.month);
+  }
+
+  private fit(v: number, r: number) {
+    return (v % r + r) % r
+  }
+
+  private formatMonthView() {
+    const y = this.currentDate.getFullYear()
+    return this.currentDate.toLocaleString('en-US', { month: 'long' }) + ' ' + (y == this.year ? '' : y)
   }
 
   openDialog(): void {
