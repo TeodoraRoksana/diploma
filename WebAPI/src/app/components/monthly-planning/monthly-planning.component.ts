@@ -120,7 +120,7 @@ export class MonthlyPlanningComponent {
       this.taskFromDialog = result;
     
       for (const day of this.daysOfMonthWeek.flat(2)) {
-        if (day.date.getTime() == this.taskFromDialog.date.getTime()) {
+        if (day.date.getTime() == this.taskFromDialog.beginDate.getTime()) {
           day.listOfTasks.push(this.taskFromDialog);
           break;
         }

@@ -13,8 +13,8 @@
         <div class="modeDate row">
             <mat-form-field appearance="outline">
                 <mat-label>Select mode</mat-label>
-                <mat-select [formControl]="modeFormControl" required [(value)]="taskData.mode" name="mode" [value]="taskData.mode" >
-                <mat-option *ngFor="let mode of modes" [value]="mode.value" >
+                <mat-select [formControl]="modeFormControl" required (valueChange)="onSelectedDateMode()" [(value)]="taskData.mode" name="mode" [value]="taskData.mode" >
+                <mat-option #dateMode *ngFor="let mode of modes" [value]="mode.value" >
                     {{mode.viewValue}}
                 </mat-option>
                 </mat-select>
@@ -24,7 +24,7 @@
                 </mat-error>
             </mat-form-field>
 
-            <mat-form-field >
+            <mat-form-field *ngIf="taskData.mode == 'day'">
                 <mat-label>Enter a date range</mat-label>
                 <mat-date-range-input [rangePicker]="picker">
                 <input [formControl]="dateStartFormControl" [(ngModel)]="taskData.date" matStartDate placeholder="Start date">
@@ -108,7 +108,7 @@
 
         <mat-form-field class="note">
             <mat-label>Note</mat-label>
-            <textarea matInput></textarea>
+            <textarea matInput>{{taskData.mode}}</textarea>
         </mat-form-field>
 
         <div class="btns row">

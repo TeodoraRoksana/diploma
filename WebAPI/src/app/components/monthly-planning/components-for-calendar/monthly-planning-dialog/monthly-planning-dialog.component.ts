@@ -50,26 +50,9 @@ export declare const ENTER = 13;
   selector: 'app-monthly-planning-dialog',
   templateUrl: './monthly-planning-dialog.component.html',
   styleUrls: ['./monthly-planning-dialog.component.css'],
-  // standalone: true,
-  // imports: [
-  //   FormsModule, 
-  //   MatInputModule, 
-  //   ReactiveFormsModule, 
-  //   NgIf, 
-  //   MatIconModule,
-  //   MatButtonModule,
-  //   MatSelectModule,
-  //   NgFor,
-  //   MatNativeDateModule,
-  //   MatDatepickerModule,
-  //   MatCheckboxModule,
-  //   MatChipsModule,
-  //   MatAutocompleteModule,
-  //   AsyncPipe,
-  //   MatDialogModule,
-  // ],
 })
 export class MonthlyPlanningDialogComponent {
+  @ViewChild('dateMode') dateMode!: ElementRef;
   dataTask: Task = new Task;
   
   hideRequired='true';
@@ -201,5 +184,9 @@ export class MonthlyPlanningDialogComponent {
       return;
     console.time('saveTask');
       this.dialogRef.close(this.taskData);
+  }
+
+  onSelectedDateMode(){
+    this.taskData.mode = this.dateMode.nativeElement.value;
   }
 }

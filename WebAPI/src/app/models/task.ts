@@ -1,8 +1,13 @@
 export class Task{
     public Name = '';
-    public date = new Date;
+    public beginDate = new Date;
+    public endDate = new Date;
+    public note = "";
+    public userId = 0;
+    public mode = '';
+    public important = false;
     //DateRange
     public colorOfTask = '';
-    public mode = '';
+    
     //else
 }
