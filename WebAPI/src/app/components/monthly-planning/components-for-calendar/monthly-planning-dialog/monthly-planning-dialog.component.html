@@ -1,10 +1,11 @@
 <div class="newTaskForm">
     
     <h2>Add new task</h2>
-    <form>
-        <mat-form-field class="name" [hideRequiredMarker]="hideRequired" appearance="outline">
-            <mat-label>Name</mat-label>
-            <input required matInput [formControl]="nameFormControl" [errorStateMatcher]="matcher" [(ngModel)]="taskData.Name" placeholder="Enter name">
+    <form #TaskForm="ngForm">
+        <!-- <mat-form-field class="name" [hideRequiredMarker]="hideRequired" appearance="outline"> -->
+        <mat-form-field class="name" appearance="outline">
+          <mat-label>Name</mat-label>
+            <input required matInput [formControl]="nameFormControl" [errorStateMatcher]="matcher" [(ngModel)]="taskData.name" placeholder="Enter name">
             <mat-hint></mat-hint>
             <mat-error *ngIf="nameFormControl.hasError('required')">
                 Name is required!
@@ -25,19 +26,43 @@
             </mat-form-field>
 
             <mat-form-field *ngIf="taskData.mode == 'day'">
-                <mat-label>Enter a date range</mat-label>
-                <mat-date-range-input [rangePicker]="picker">
-                <input [formControl]="dateStartFormControl" [(ngModel)]="taskData.date" matStartDate placeholder="Start date">
-                <input [formControl]="dateFinishFormControl" [(ngModel)]="taskData.date" matEndDate placeholder="End date">
-                </mat-date-range-input>
-                <mat-hint></mat-hint>
-                <mat-error *ngIf="dateStartFormControl.hasError('required') || dateFinishFormControl.hasError('required') ">
-                  Select date or range of date
+              <mat-label>Choose date</mat-label>
+              <input #dayInput matInput [matDatepicker]="picker"  [formControl]="dateStartFormControl" [(ngModel)]="taskData.beginDate" [(ngModel)]="taskData.endDate">
+              <mat-hint></mat-hint>
+                <mat-error *ngIf="dateStartFormControl.hasError('required')">
+                  Select day
                 </mat-error>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
-            
-                
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="taskData.mode == 'week'">
+              <mat-label>Choose date range</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input  [formControl]="dateStartFormControl" [(ngModel)]="taskData.beginDate" matStartDate placeholder="Start date">
+                <input [formControl]="dateStartFormControl" [(ngModel)]="taskData.endDate" matEndDate placeholder="End date">
+              </mat-date-range-input>
+              <mat-hint></mat-hint>
+                <mat-error *ngIf="dateStartFormControl.hasError('required')">
+                  Select week
+                </mat-error>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="taskData.mode == 'month'">
+              <mat-label>Choose month and year</mat-label>
+              <input #monthPicker matInput [matDatepicker]="dp" [(ngModel)]="taskData.beginDate" [(ngModel)]="taskData.endDate" [formControl]="dateStartFormControl">
+              <mat-hint></mat-hint>
+              <mat-error *ngIf="dateStartFormControl.hasError('required')">
+                Select month
+              </mat-error>
+              <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+              <mat-datepicker #dp
+                              startView="multi-year"
+                              (monthSelected)="setMonthAndYear($event, dp)"
+                              panelClass="example-month-picker">
+              </mat-datepicker>
             </mat-form-field>
         </div>
         <!-- <div>
@@ -108,7 +133,7 @@
 
         <mat-form-field class="note">
             <mat-label>Note</mat-label>
-            <textarea matInput>{{taskData.mode}}</textarea>
+            <textarea matInput>{{taskData.beginDate}}</textarea>
         </mat-form-field>
 
         <div class="btns row">

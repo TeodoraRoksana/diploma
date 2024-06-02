@@ -23,7 +23,12 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDividerModule} from '@angular/material/divider';
-
+import { 
+	IgxInputGroupModule,
+	IgxDateTimeEditorModule,
+	IgxTextSelectionModule
+ } from "igniteui-angular";
+ 
 import {
   SocialLoginModule,
 } from '@abacritt/angularx-social-login';
@@ -76,6 +81,9 @@ import { DailyPlanningComponent } from './components/daily-planning/daily-planni
     MatAutocompleteModule,
     AsyncPipe,
     MatDividerModule,
+    IgxInputGroupModule,
+    IgxDateTimeEditorModule,
+    IgxTextSelectionModule,
 
     SocialLoginModule,
   ],

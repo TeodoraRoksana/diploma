@@ -28,6 +28,8 @@ mat-hint, mat-error{
 
 .note textarea {
     min-height: 96px;
+    max-height: 96px;
+    resize: none;
 }
 
 .row {

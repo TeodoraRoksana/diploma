@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, Inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, Inject, Injectable } from '@angular/core';
 import {NgFor, AsyncPipe} from '@angular/common';
 import {
   FormGroup,
@@ -15,8 +15,12 @@ import {NgIf} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import {
+  MatDateRangeSelectionStrategy,
+  DateRange,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+} from '@angular/material/datepicker';
+import {DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS} from '@angular/material/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 // import  { DateTime }  from  "ts-luxon" ;
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
@@ -25,7 +29,10 @@ import {Observable} from 'rxjs';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {map, startWith} from 'rxjs/operators';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
-
+import {MatDatepicker} from '@angular/material/datepicker';
+import * as _moment from 'moment';
+import {default as _rollupMoment, Moment} from 'moment';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 
 import { Task } from 'src/app/models/task';
 
@@ -38,30 +45,84 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
+@Injectable()
+export class WeekRangeSelectionStrategy<D> implements MatDateRangeSelectionStrategy<D> {
+  constructor(private _dateAdapter: DateAdapter<D>) {}
+
+  selectionFinished(date: D | null): DateRange<D> {
+    return this._createFiveDayRange(date);
+  }
+
+  createPreview(activeDate: D | null): DateRange<D> {
+    return this._createFiveDayRange(activeDate);
+  }
+
+  private _createFiveDayRange(date: D | null): DateRange<D> {
+    if (date) {
+      let numberWeek = this._dateAdapter.getDayOfWeek(date);
+      let offsetRight = numberWeek != 6 ?  6 - (numberWeek + 6) % 6 : 0;
+      let offsetLeft = -numberWeek;
+
+
+      const start = this._dateAdapter.addCalendarDays(date, offsetLeft);
+      const end = this._dateAdapter.addCalendarDays(date, offsetRight);
+      return new DateRange<D>(start, end);
+    }
+
+    return new DateRange<D>(null, null);
+  }
+}
+
 interface Modes{
   value: string;
   viewValue: string;
 }
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 export declare const COMMA = 188;
 export declare const ENTER = 13;
+const moment = _rollupMoment || _moment;
+
 
 @Component({
   selector: 'app-monthly-planning-dialog',
   templateUrl: './monthly-planning-dialog.component.html',
   styleUrls: ['./monthly-planning-dialog.component.css'],
+  providers: [
+    {
+      provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+      useClass: WeekRangeSelectionStrategy,
+    },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 export class MonthlyPlanningDialogComponent {
   @ViewChild('dateMode') dateMode!: ElementRef;
+  @ViewChild('monthPicker') monthPicker!: ElementRef;
   dataTask: Task = new Task;
   
   hideRequired='true';
   selectedMode = '';
+  colorOfTag = "";
 
   nameFormControl = new FormControl('', [Validators.required]);
   modeFormControl = new FormControl('', [Validators.required]);
-  dateStartFormControl = new FormControl('', [Validators.required]);
-  dateFinishFormControl = new FormControl('', [Validators.required]);
+  dateStartFormControl = new FormControl(moment(), [Validators.required]);
 
   matcher = new MyErrorStateMatcher();
 
@@ -118,8 +179,6 @@ export class MonthlyPlanningDialogComponent {
       startWith(null),
       map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
     );
-
-    console.timeEnd('dialog');
   }
 
   add(event: MatChipInputEvent): void {
@@ -163,11 +222,10 @@ export class MonthlyPlanningDialogComponent {
     return this.allTags.filter(tag => tag.toLowerCase().includes(filterValue));
   }
 
-  colorOfTag = "";
+  
 
   onNoClick(): void {
-    this.dialogRef.close();
-    
+    this.dialogRef.close(null);
   }
 
   save(){
@@ -176,17 +234,25 @@ export class MonthlyPlanningDialogComponent {
       [
         this.nameFormControl,
         this.modeFormControl,
-        this.dateStartFormControl,
-        this.dateFinishFormControl
+        this.dateStartFormControl
       ]
       .some(control => control.invalid)
       )
       return;
-    console.time('saveTask');
       this.dialogRef.close(this.taskData);
   }
 
   onSelectedDateMode(){
-    this.taskData.mode = this.dateMode.nativeElement.value;
+    //this.taskData.mode = this.dateMode.nativeElement.value;
+    this.dateStartFormControl.setValue(null);
+  }
+
+  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+    //const ctrlValue =  normalizedMonthAndYear;
+    
+    //ctrlValue.month(normalizedMonthAndYear.month());
+    //ctrlValue.year(normalizedMonthAndYear.year());
+    this.dateStartFormControl.setValue(normalizedMonthAndYear);
+    datepicker.close();
   }
 }

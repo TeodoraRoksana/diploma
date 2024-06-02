@@ -1,13 +1,15 @@
+import { Tag } from "./tag";
+
 export class Task{
-    public Name = '';
-    public beginDate = new Date;
-    public endDate = new Date;
+    public id = 0;
+    public name = '';
+    public beginDate!:Date | null;
+    public endDate!:Date | null;
     public note = "";
     public userId = 0;
     public mode = '';
     public important = false;
-    //DateRange
-    public colorOfTask = '';
-    
-    //else
+    public timeSelected = false;
+ 
+    public tag!:Tag;
 }
