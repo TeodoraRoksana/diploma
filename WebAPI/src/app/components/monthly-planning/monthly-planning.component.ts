@@ -119,6 +119,8 @@ export class MonthlyPlanningComponent {
         return;
       }
       this.taskFromDialog = result;
+      console.log(this.taskFromDialog.beginDate);
+      
     
       
       for (const day of this.daysOfMonthWeek.flat(2)) {
