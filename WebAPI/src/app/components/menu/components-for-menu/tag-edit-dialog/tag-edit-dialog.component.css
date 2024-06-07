@@ -1,10 +1,6 @@
-.mat-mdc-dialog-container{
-    max-width: 500px;
-    min-width: 500px;  
-}
-.newTaskForm{
-    max-width: 500px;
-    min-width: 500px;
+.newTagForm{
+    max-width: 350px;
+    min-width: 350px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -26,14 +22,8 @@ mat-hint, mat-error{
     font-size: 0.8em;;
 }
 
-.name, .note {
+.name {
     width: 100%;
-}
-
-.note textarea {
-    min-height: 96px;
-    max-height: 96px;
-    resize: none;
 }
 
 .row {
@@ -45,12 +35,6 @@ mat-hint, mat-error{
     & mat-form-field, button {
         width: 100%;
     }
-}
-
-.important{
-    position: absolute;
-    top: 10px;
-    right: 20px;
 }
 
 .color {
@@ -78,4 +62,10 @@ mat-hint, mat-error{
         height: 48px;
         font-size: 1em;
     }
+}
+
+.delete{
+    position: absolute;
+    top: 10px;
+    right: 20px;
 }

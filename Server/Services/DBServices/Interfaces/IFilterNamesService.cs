@@ -11,8 +11,8 @@ namespace Services.DBServices.Interfaces
     {
         public Task<List<FilterNames>> GetAllFilterNamesByUserId(int user_id);
         public Task<FilterNames> GetFilterNamesById(int id);
-        public Task<List<FilterNames>> PostFilterNamesForUser(FilterNames filterNames);
+        public Task<FilterNames> PostFilterNamesForUser(FilterNames filterNames);
         public Task<FilterNames> PutFilterNamesForUser(FilterNames filterNames);
-        public Task<List<FilterNames>> DeleteFilterNamesForUserById(int id);
+        public Task DeleteFilterNamesForUserById(int id);
     }
 }

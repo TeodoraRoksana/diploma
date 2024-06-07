@@ -12,6 +12,6 @@ namespace Server.Models
 
         [JsonIgnore]
         public Tasks? Tasks {  get; set; }
-        public FilterNames FilterNames { get; set; }
+        public FilterNames? FilterNames { get; set; }
     }
 }

@@ -1,3 +1,4 @@
 {
-    "UserEmailNotFound": "User with this email does not exist!"
+    "UserEmailNotFound": "User with this email does not exist!",
+    "TagNameAlreadyExist": "cant add FilterNames Messege error: tag with this name already exists!"
 }

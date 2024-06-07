@@ -59,11 +59,12 @@ namespace Server.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<List<FilterNames>>> DeleteFilterNameById(int id)
+        public async Task<ActionResult> DeleteFilterNameById(int id)
         {
             try
             {
-                return (await _filterNamesService.DeleteFilterNamesForUserById(id));
+                await _filterNamesService.DeleteFilterNamesForUserById(id);
+                return Ok();
             }
             catch (Exception ex)
             {

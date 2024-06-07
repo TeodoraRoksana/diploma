@@ -85,3 +85,30 @@ textarea {
     line-height: 1.1;
     color: var(--text-color);
 }
+
+.calendar {
+    padding: 20px;
+    padding-top: 30px;
+}
+
+.week {
+    display: flex;
+}
+
+.day {
+    width: 100%;
+    text-align: center;
+    aspect-ratio: 1 / 1;
+    line-height: calc(260px / 7);
+    cursor: pointer;
+    border-radius: 50%;
+
+    &.greyed {
+        color: #aaa;
+    }
+
+    &:hover {
+        background: #1f7efb;
+        color: white;
+    }
+}

@@ -1,8 +1,10 @@
 ﻿using DataBaseLayer.Models.DTO;
+using DataBaseLayer.Models.Mapper;
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
 using Services.DBServices;
 using Services.DBServices.Interfaces;
+using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
@@ -11,20 +13,28 @@ namespace Server.Controllers
     public class TasksController : Controller
     {
         private readonly ITasksDBService _tasksDBService;
+        private readonly IMapper<Tasks, TasksDTO> _tasksMapper;
 
-        public TasksController(ITasksDBService tasksDBService)
+        public TasksController(ITasksDBService tasksDBService,
+            IMapper<Tasks, TasksDTO> tasksMapper)
         {
             _tasksDBService = tasksDBService;
+            _tasksMapper = tasksMapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Tasks>>> GetAllUserTasks(int user_id)
+        public async Task<ActionResult<List<TasksDTO>>> GetAllUserTasks(int user_id)
         {
             try
             {
                 var tasks = await _tasksDBService.GetAllUserTasks(user_id);
+                var tasksDTO = new List<TasksDTO>();
+                tasks.ForEach(t =>
+                {
+                    tasksDTO.Add(_tasksMapper.Map(t));
+                });
 
-                return Ok(tasks);
+                return Ok(tasksDTO);
             }
             catch (Exception ex)
             {
@@ -38,7 +48,7 @@ namespace Server.Controllers
         {
             try
             {
-                var task = await _tasksDBService.GetUserTaskById(id);
+                var task = await _tasksDBService.GetUserTaskById(id);                
 
                 return Ok(task);
             }
@@ -49,31 +59,44 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        [Route("/Task/GetTasksByDate")]
-    public async Task<ActionResult<List<Tasks>>> GetListOfTasksByDate(DateTasksNUserIdDTO dateTasksNUserId)
+        [Route("/Tasks/GetTasksByDate")]
+        public async Task<ActionResult<List<Tasks>>> GetListOfTasksByDate(DateTasksNUserIdDTO dateTasksNUserId)
         {
             try
             {
                 List<Tasks> tasks = new List<Tasks>();
-                if(dateTasksNUserId.TypeDate == 0)
+                var tasksDTO = new List<TasksDTO>();
+                if (dateTasksNUserId.TypeDate == "day")
                 {
                     tasks = (await _tasksDBService.GetUserTasksByDateForDay(dateTasksNUserId.User_Id, dateTasksNUserId.Date));
+                    tasks.ForEach(t =>
+                    {
+                        tasksDTO.Add(_tasksMapper.Map(t));
+                    });
                 }
-                else if(dateTasksNUserId.TypeDate == 1)
+                else if(dateTasksNUserId.TypeDate == "week")
                 {
                     int number_day = (int)dateTasksNUserId.Date.DayOfWeek;
                     tasks = (await _tasksDBService.GetUserTasksByDateForWeek(
                         dateTasksNUserId.User_Id,
                         dateTasksNUserId.Date.AddDays(-(number_day - 1)),
                         dateTasksNUserId.Date.AddDays(7 - number_day)));
+                    tasks.ForEach(t =>
+                    {
+                        tasksDTO.Add(_tasksMapper.Map(t));
+                    });
 
                 }
-                else if(dateTasksNUserId.TypeDate == 2)
+                else if(dateTasksNUserId.TypeDate == "month")
                 {
                     tasks = await _tasksDBService.GetUserTasksByDateForMonth(dateTasksNUserId.User_Id, dateTasksNUserId.Date);
+                    tasks.ForEach(t =>
+                    {
+                        tasksDTO.Add(_tasksMapper.Map(t));
+                    });
                 }
 
-                return Ok(tasks);
+                return Ok(tasksDTO);
             }
             catch (Exception ex)
             {
@@ -82,11 +105,14 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Tasks>> PostNewTask(Tasks task)
+        public async Task<ActionResult<TasksDTO>> PostNewTask(TasksDTO task)
         {
             try
             {
-                return Ok(await _tasksDBService.PostUserTask(task));
+                var newTasks = _tasksMapper.Unmap(task);
+                newTasks = await _tasksDBService.PostUserTask(newTasks);
+
+                return Ok(_tasksMapper.Map(newTasks));
             }
             catch (Exception ex)
             {
@@ -95,11 +121,29 @@ namespace Server.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Tasks>> PutUserTask(Tasks task)
+        public async Task<ActionResult<TasksDTO>> PutUserTask(TasksDTO task)
         {
             try
             {
-                return Ok(await _tasksDBService.PutUserTask(task));
+                var newTasks = _tasksMapper.Unmap(task);
+                newTasks = await _tasksDBService.PutUserTask(newTasks);
+
+                return Ok(_tasksMapper.Map(newTasks));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteTaskById(int id)
+        {
+            try
+            {
+                await _tasksDBService.DeleteUserTaskById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -107,4 +151,6 @@ namespace Server.Controllers
             }
         }
     }
+
+    
 }

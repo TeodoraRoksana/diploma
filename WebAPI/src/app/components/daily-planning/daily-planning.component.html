@@ -3,7 +3,13 @@
 <div class="day-view">
     <div class="view">
         <div class="calendar-notes">
-            <div class="calendar block"></div>
+            <div class="calendar block">
+                <div class="week" *ngFor="let week of calendar">
+                    <div class="day {{day.greyed ? 'greyed' : ''}}" *ngFor="let day of week">
+                        {{day.date.getDate()}}
+                    </div>
+                </div>
+            </div>
             <div class="notes block">
                 <textarea placeholder="Your notes here..." name="notes" id="notes"></textarea>
             </div>

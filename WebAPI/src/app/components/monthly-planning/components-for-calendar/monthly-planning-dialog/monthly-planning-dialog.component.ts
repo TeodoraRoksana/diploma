@@ -35,6 +35,12 @@ import {default as _rollupMoment, Moment} from 'moment';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 
 import { Task } from 'src/app/models/task';
+import { AppState } from 'src/app/store/app.state';
+import { Store } from '@ngrx/store';
+import { selectTagsFromStore } from 'src/app/store/tags/tag.selectors';
+import { Tag } from 'src/app/models/tag';
+import { HttpErrorResponse } from '@angular/common/http';
+import { TaskService } from 'src/app/services/task.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -60,8 +66,8 @@ export class WeekRangeSelectionStrategy<D> implements MatDateRangeSelectionStrat
   private _createFiveDayRange(date: D | null): DateRange<D> {
     if (date) {
       let numberWeek = this._dateAdapter.getDayOfWeek(date);
-      let offsetRight = numberWeek != 6 ?  6 - (numberWeek + 6) % 6 : 0;
-      let offsetLeft = -numberWeek;
+      let offsetRight = numberWeek != 0 ?  7 - numberWeek : 0;
+      let offsetLeft = numberWeek != 0 ? 1 - numberWeek : -6;
 
 
       const start = this._dateAdapter.addCalendarDays(date, offsetLeft);
@@ -78,17 +84,17 @@ interface Modes{
   viewValue: string;
 }
 
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+// export const MY_FORMATS = {
+//   parse: {
+//     dateInput: 'MM/YYYY',
+//   },
+//   display: {
+//     dateInput: 'MM/YYYY',
+//     monthYearLabel: 'MMM YYYY',
+//     dateA11yLabel: 'LL',
+//     monthYearA11yLabel: 'MMMM YYYY',
+//   },
+// };
 export declare const COMMA = 188;
 export declare const ENTER = 13;
 const moment = _rollupMoment || _moment;
@@ -103,22 +109,22 @@ const moment = _rollupMoment || _moment;
       provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
       useClass: WeekRangeSelectionStrategy,
     },
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    // {
+    //   provide: DateAdapter, useValue: new LuxonDateAdapter('en-GB',{
+    //     firstDayOfWeek: 1,
+    //     useUtc: true
+    //   })
+    // }
   ],
 })
 export class MonthlyPlanningDialogComponent {
   @ViewChild('dateMode') dateMode!: ElementRef;
   @ViewChild('monthPicker') monthPicker!: ElementRef;
-  dataTask: Task = new Task;
-  
+ 
+  listOfTags!: Tag[];
   hideRequired='true';
   selectedMode = '';
-  colorOfTag = "";
+  //colorOfTag = "";
 
   nameFormControl = new FormControl('', [Validators.required]);
   modeFormControl = new FormControl('', [Validators.required]);
@@ -132,10 +138,10 @@ export class MonthlyPlanningDialogComponent {
     {value: 'month', viewValue: 'Month'},    
   ];
 
-  range = new FormGroup({
-    start: new FormControl('', [Validators.required]),
-    end: new FormControl('', [Validators.required]),
-  });
+  // range = new FormGroup({
+  //   start: new FormControl('', [Validators.required]),
+  //   end: new FormControl('', [Validators.required]),
+  // });
 
   // disabled = false;
 
@@ -161,75 +167,47 @@ export class MonthlyPlanningDialogComponent {
   // }
 
   //separatorKeysCodes: number[] = [ENTER, COMMA];
-  tagsCtrl = new FormControl('');
-  filteredTags: Observable<string[]>;
-  tags: string[] = [];
-  allTags: string[] = ['Home', 'Study'];
+  //tagsCtrl = new FormControl('');
+  //tags: string[] = [];
+  //allTags: string[] = ['Home', 'Study'];
 
   //@ViewChild('tagsInput') tagsInput: ElementRef<HTMLInputElement>;
 
-  announcer = Inject(LiveAnnouncer);
+  //announcer = Inject(LiveAnnouncer);
 
   constructor(
     public dialogRef: MatDialogRef<MonthlyPlanningDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public taskData: Task,
+    private _adapter: DateAdapter<any>,
+    private store:Store<AppState>,
+    private taskService:TaskService
     ) {
-    this.filteredTags = this.tagsCtrl.valueChanges.
-    pipe(
-      startWith(null),
-      map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
-    );
-  }
+      
+    _adapter.getFirstDayOfWeek = () => 1;
 
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
-    if (value && this.tags.length < 1) {
-      this.tags.push(value);
+    store.select(selectTagsFromStore)
+    .subscribe({
+      next: (result: Tag[]) => {
+        this.listOfTags = result;
+        //result.forEach(t => this.listOfTags.push(Object.assign({}, t)));
+      },
+      error: ({ error, message, status } : HttpErrorResponse) => {
+        console.log('Tag get from store error:', error);
+      }
+    });
+    if(taskData.mode != 'day'){
+      this.modeFormControl.setValue('day');
     }
-
-    // Clear the input value
-    event.chipInput!.clear();
-
-    this.tagsCtrl.setValue(null);
-  }
-
-  remove(fruit: string): void {
-    const index = this.tags.indexOf(fruit);
-
-    if (index >= 0) {
-      this.tags.splice(index, 1);
-
-      this.announcer.announce(`Removed ${fruit}`);
-    }
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    if(this.tags.length < 1){
-      this.tags.push(event.option.viewValue);
-    }
-     // this.tagsInput.nativeElement.value = '';
-    
-    this.tagsCtrl.setValue(null);
-    
     
   }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.allTags.filter(tag => tag.toLowerCase().includes(filterValue));
-  }
-
-  
 
   onNoClick(): void {
     this.dialogRef.close(null);
   }
 
   save(){
-
+    console.log(this.taskData);
+    
     if(
       [
         this.nameFormControl,
@@ -239,20 +217,31 @@ export class MonthlyPlanningDialogComponent {
       .some(control => control.invalid)
       )
       return;
-      this.dialogRef.close(this.taskData);
+      this.taskData.userId = 1; //store userId
+
+      this.taskService
+      .postTask(this.taskData)
+      .subscribe({
+        next: (result: Task) => {
+          this.taskData = result;
+          this.dialogRef.close(this.taskData);
+        },
+        error: ({ error, message, status } : HttpErrorResponse) => {
+          // if (error == errorData.TagNameAlreadyExist) {
+          //   console.log('Fuck mate, find you!', error);
+          //   this.tag_name_hint = "tag's name already exists!";
+          //   this.tagNameFormControl.setErrors({tagExists: true});
+          // } else {
+            console.log('Unknown error:', error);
+            //this.tag_name_hint = 'Unknown error:' + error;
+          //}
+        }
+      });
+
+      //this.dialogRef.close(this.taskData);
   }
 
   onSelectedDateMode(){
-    //this.taskData.mode = this.dateMode.nativeElement.value;
     this.dateStartFormControl.setValue(null);
-  }
-
-  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
-    //const ctrlValue =  normalizedMonthAndYear;
-    
-    //ctrlValue.month(normalizedMonthAndYear.month());
-    //ctrlValue.year(normalizedMonthAndYear.year());
-    this.dateStartFormControl.setValue(normalizedMonthAndYear);
-    datepicker.close();
   }
 }

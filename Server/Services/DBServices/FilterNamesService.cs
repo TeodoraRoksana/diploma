@@ -25,19 +25,24 @@ namespace Services.DBServices
 
         public async Task<FilterNames> GetFilterNamesById(int id)
         {
-            return (await _dbContext.FilterNames.SingleAsync(fn => fn.Id == id));
+            return (await _dbContext.FilterNames.SingleOrDefaultAsync(fn => fn.Id == id));
         }
 
-        public async Task<List<FilterNames>> PostFilterNamesForUser(FilterNames filterNames)
+        public async Task<FilterNames> PostFilterNamesForUser(FilterNames filterNames)
         {
             try
             {
+                var listFilterNamesByUserId = await GetAllFilterNamesByUserId(filterNames.UsersId);
+                if(listFilterNamesByUserId != null && listFilterNamesByUserId.SingleOrDefault(t => t.Name == filterNames.Name) != null) {
+                    throw new Exception($"tag with this name already exists!");
+                }
+
                 await _dbContext.FilterNames.AddAsync(filterNames);
                 await _dbContext.SaveChangesAsync();
 
                 
 
-                return (await GetAllFilterNamesByUserId(filterNames.UsersId));
+                return filterNames;
             }
             catch (Exception ex)
             {
@@ -50,6 +55,8 @@ namespace Services.DBServices
             try
             {
                 var oldFilterName = await GetFilterNamesById(filterNames.Id);
+                if(oldFilterName == null)
+                    throw new Exception($"tag is not exist!");
 
                 oldFilterName.Name = filterNames.Name;
                 oldFilterName.Color = filterNames.Color;
@@ -61,31 +68,33 @@ namespace Services.DBServices
             }
             catch (Exception ex)
             {
-                throw new Exception($"cant update {typeof(Tasks).Name} Messege error: " + ex);
+                throw new Exception($"cant update {typeof(FilterNames).Name} Messege error: " + ex);
             }
         }
-        public async Task<List<FilterNames>> DeleteFilterNamesForUserById(int id)
+        public async Task DeleteFilterNamesForUserById(int id)
         {
-            var filterNames = await GetFilterNamesById(id);
+            
+                var filterNames = await GetFilterNamesById(id);
 
-            if(filterNames != null)
-            {
-                List<Tasks_FilterNames> tasks_FilterNames = _dbContext.Tasks_FilterNames.Where(tf => tf.FilterNamesId == filterNames.Id).ToList();
-                for (int i = 0; i < tasks_FilterNames.Count; i++)
+                if (filterNames != null)
                 {
+                    List<Tasks_FilterNames> tasks_FilterNames = _dbContext.Tasks_FilterNames.Where(tf => tf.FilterNamesId == filterNames.Id).ToList();
+                    for (int i = 0; i < tasks_FilterNames.Count; i++)
+                    {
 
-                    _dbContext.Tasks_FilterNames.Remove(tasks_FilterNames[i]);
-                    
+                        _dbContext.Tasks_FilterNames.Remove(tasks_FilterNames[i]);
+
+                    }
+                    _dbContext.FilterNames.Remove(filterNames);
+                    await _dbContext.SaveChangesAsync();
                 }
-                _dbContext.FilterNames.Remove(filterNames);
-                await _dbContext.SaveChangesAsync();
-            }
-            else
-            {
-                throw new Exception("not found filter with id = " + id);
-            }
+                else
+                {
+                    throw new Exception("not found filter with id = " + id);
+                }
+            
 
-            return await GetAllFilterNamesByUserId(filterNames.UsersId);
+
         }
 
     }

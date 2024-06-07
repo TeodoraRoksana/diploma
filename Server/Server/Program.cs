@@ -31,6 +31,7 @@ builder.Services.AddScoped<ITasks_FilterNamesService, Tasks_FilterNamesService>(
 builder.Services.AddScoped<IFilterNamesService, FilterNamesService>();
 builder.Services.AddScoped<IHashService, HashService>();
 builder.Services.AddScoped<IMapper<Users, RegistrationDTO>, UserRegistrationMapper>();
+builder.Services.AddScoped<IMapper<Tasks, TasksDTO>, TasksMapper>();
 builder.Services.AddScoped<IUsersPasswordSaltDBService, UsersPasswordSaltDBService>();
 
 var app = builder.Build();

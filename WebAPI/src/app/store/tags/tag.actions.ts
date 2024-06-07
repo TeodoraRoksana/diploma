@@ -11,7 +11,7 @@ export const deleteTag = createAction(
     props<{ id: number }>()
 );
 
-export const getAllTags = createAction(
-    '[MenuComponent] Get All Tags',
+export const setListOfTags = createAction(
+    '[MenuComponent] Set All Tags',
     props<{ tags: Tag[] }>()
 );

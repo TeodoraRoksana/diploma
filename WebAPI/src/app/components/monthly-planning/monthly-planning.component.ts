@@ -9,23 +9,31 @@ import { MenuComponent } from '../menu/menu.component';
 import { WeekCellComponent } from './components-for-calendar/week-cell/week-cell.component';
 import {MonthlyPlanningDialogComponent} from './components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component'
 import { Task } from 'src/app/models/task';
+import { GenerateMonth } from 'src/app/services/generate-month.service';
+import { TaskService } from 'src/app/services/task.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { TaskByDate } from 'src/app/models/taskByDate';
 
 @Component({
   selector: 'app-monthly-planning',
   templateUrl: './monthly-planning.component.html',
   styleUrls: ['./monthly-planning.component.css'],
-  // standalone: true,
-  // imports: [
-  //   MatIconModule,
-  //   MatButtonModule,
-  //   NgFor,
-  //   MenuComponent,
-  //   WeekCellComponent,
-  //   MatDialogModule,
-  // ],
+  providers: [
+    GenerateMonth
+  ]
 })
 
 export class MonthlyPlanningComponent {
+  generalListOfTasks: Task[] = [];
+  filtredListOfTasks: Task[] = [];
+
+  monthTasks: Task[] = [];
+  weekTasks: Task[] = [];
+  dayTasks: Task[] = [];
+  dayTasksMap?: Map<number, Task[]>;
+
+  taskByDate = new TaskByDate();
+
   dayInMs = 86_400_000;
 
   daysOfMonthWeek: Day[][] = new Array(new Array);
@@ -39,43 +47,64 @@ export class MonthlyPlanningComponent {
 
   monthName = this.formatMonthView()
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, 
+    private generateMonth : GenerateMonth, 
+    private taskService:TaskService
+  ) {}
 
   ngOnInit() : void{
-    this.daysOfMonthWeek = this.getMonth(this.year, this.month);
+    this.daysOfMonthWeek = this.generateMonth.getMonth(this.year, this.month);
+    this.taskFromDialog.tag = null;
+
+    this.taskByDate.user_Id = 1;
+    this.taskByDate.typeDate = "month";
+    this.taskByDate.date = this.currentDate;
+    
+    this.fetchMonth();
+
   }
 
-  getMonth(year: number, month: number): Day[][] {
-    const list: Day[] = [];
+  sortViewTasks(){
+    this.monthTasks = this.filtredListOfTasks.filter(t => t.mode == "month");
+    this.dayTasks = this.filtredListOfTasks.filter(t => t.mode == "day");
 
-    let date = new Date(year, month, 1);
-    const offset = ((date.getDay() + 6) % 7);
-    let day = 1 - offset
-    date = new Date(year, month, day);
+    this.dayTasksMap = this.dayTasks.reduce((acc, v) => {
+      const key = MonthlyPlanningComponent.removeTime(v.beginDate!).getTime()
+      const tasks = acc.get(key)
+      tasks
+        ? tasks.push(v)
+        : acc.set(key, [v])
+      return acc
+    }, new Map<number, Task[]>())
 
-    let endDate = new Date(year, month + 1, 1);
-    const offset2 = ((8 - endDate.getDay()) % 7);
-    endDate = new Date(year, month + 1, 1 + offset2);
+    console.log('Map', [...this.dayTasksMap.entries()]);
 
-    while(date.getTime() < endDate.getTime()){
-      const greyed = this.fit(this.month, 12) !== date.getMonth()
+    for (const day of this.daysOfMonthWeek.flat(2)) {
+      const key = MonthlyPlanningComponent.removeTime(day.date).getTime()
+      const tasks = this.dayTasksMap.get(key)
       
-      list.push(new Day(date, greyed));
-
-      date = new Date(year, month, ++day);
-    }
-
-    return list.reduce<Day[][]>((resultArray, item, index) => { 
-      const chunkIndex = Math.floor(index/7)
-    
-      if(!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = [] // start a new chunk
+      if (tasks) {
+        day.listOfTasks = tasks
       }
-    
-      resultArray[chunkIndex].push(item)
-    
-      return resultArray
-    }, [])
+    }
+  }
+
+  fetchMonth(){
+    this.taskService
+    .getTaskForCurrentPage(this.taskByDate) //store userId
+    .subscribe({
+      next: (result: Task[]) => {
+        this.generalListOfTasks = result;
+        this.filtredListOfTasks = result; //filtr
+
+        console.table(this.generalListOfTasks);
+        
+        this.sortViewTasks();
+      },
+      error: ({ error, message, status } : HttpErrorResponse) => {
+        console.log('Unknown error:', error);
+      }
+    });
   }
 
   nextMonth(dir: number) {
@@ -85,7 +114,12 @@ export class MonthlyPlanningComponent {
 
     this.monthName = this.formatMonthView()
     
-    this.daysOfMonthWeek = this.getMonth(this.year, this.month);
+    this.daysOfMonthWeek = this.generateMonth.getMonth(this.year, this.month);
+
+    console.log("this.currentDate ", this.currentDate);
+    
+    this.taskByDate.date = new Date(this.year, this.month+1);
+    this.fetchMonth();
   }
 
   today() {
@@ -94,12 +128,9 @@ export class MonthlyPlanningComponent {
     this.month = this.currentDate.getMonth()
     this.monthName = this.formatMonthView()
     
-    this.daysOfMonthWeek = this.getMonth(this.year, this.month);
+    this.daysOfMonthWeek = this.generateMonth.getMonth(this.year, this.month);
   }
 
-  private fit(v: number, r: number) {
-    return (v % r + r) % r
-  }
 
   private formatMonthView() {
     const y = this.currentDate.getFullYear()
@@ -111,24 +142,35 @@ export class MonthlyPlanningComponent {
     
     const dialogRef = this.dialog.open
     (MonthlyPlanningDialogComponent, {
-      data: {mode: ''},
+      data: this.taskFromDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(!result){ //fine?
         return;
       }
-      this.taskFromDialog = result;
-      console.log(this.taskFromDialog.beginDate);
+      this.taskFromDialog = result; 
+      console.log("taskFromDialog ", this.taskFromDialog);
       
-    
+    //view new task
       
       for (const day of this.daysOfMonthWeek.flat(2)) {
-        if (day.date.getTime() == this.taskFromDialog.beginDate?.getTime()) {
+        if (day.date.getTime() == new Date(this.taskFromDialog.beginDate!).getTime()) {
           day.listOfTasks.push(this.taskFromDialog);
+          
           break;
         }
       }
+
+      
     });
+
+    this.taskFromDialog = new Task;
+    this.taskFromDialog.tag = null;
+  }
+
+  static removeTime(date: Date) {
+    let d = new Date(date);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   }
 }

@@ -10,13 +10,13 @@
                     <mat-icon class="tree-icon">keyboard_arrow_down</mat-icon>
                 </button>
                 <div class="tree-planning" *ngIf="showPlanningTree">
-                    <button mat-menu-item>
+                    <button mat-menu-item (click)="redirect('monthly-planning')">
                         <span>Monthly</span>
                     </button>
-                    <button mat-menu-item>
+                    <button mat-menu-item (click)="redirect('weekly-planning')">
                         <span>Weekly</span>
                     </button>
-                    <button mat-menu-item>
+                    <button mat-menu-item (click)="redirect('daily-planning')">
                         <span>Daily</span>
                     </button>
                 </div>
@@ -26,9 +26,23 @@
                     <mat-icon class="tree-icon">keyboard_arrow_down</mat-icon>
                 </button>
                 <div class="tree-filters" *ngIf="showFilterTree">
-                    <button mat-menu-item>
-                        <mat-icon class="filter-add">add</mat-icon>
-                        <span>Name</span>
+                    <button  mat-menu-item >
+                        <mat-icon [style]="{backgroundColor: '#ffffff', color: 'var(--text-color) !important'}" class="filter-add">add</mat-icon>
+                        <span>No tag</span>
+                    </button>
+                    <div class="tag-button" *ngFor="let tag of listOfTags">
+                        <button  mat-menu-item >
+                            <mat-icon [style]="{backgroundColor: tag.color, color: (colorBlack(tag.color)?'var(--text-color) !important':'white !important')}" class="filter-add">add</mat-icon>
+                            <span>{{tag.name}}</span>
+                        </button>
+
+                        <button (click)="openDialogEditTag(tag)" mat-icon-button class="filter-edit">
+                            <mat-icon>create</mat-icon>
+                        </button>
+                    </div>
+
+                    <button mat-menu-item (click)="openDialogAddTag()">
+                        <span>+ new tag..</span>
                     </button>
                 </div>
 

@@ -15,15 +15,35 @@ namespace Services.DBServices
     {
         private DiplomaDBContext _dbContext;
         private ITasks_FilterNamesService _tasks_FilterNamesService;
-        public TasksDBService(DiplomaDBContext context, ITasks_FilterNamesService tasks_FilterNamesService) 
+        private IFilterNamesService _filterNamesService;
+        public TasksDBService(DiplomaDBContext context, 
+            ITasks_FilterNamesService tasks_FilterNamesService,
+            IFilterNamesService filterNamesService) 
         { 
             _dbContext = context; 
             _tasks_FilterNamesService = tasks_FilterNamesService;
+            _filterNamesService = filterNamesService;
+        }
+
+        private async Task getFilterNames(List<Tasks> tasks)
+        {
+            foreach (var task in tasks)
+            {
+                if (task.Tasks_FilterNames.Any())
+                {
+                    task.Tasks_FilterNames[0].FilterNames = await _filterNamesService.GetFilterNamesById(task.Tasks_FilterNames[0].FilterNamesId);
+                }
+            }
         }
 
         public async Task<List<Tasks>> GetAllUserTasks(int user_id)
         {
-            return (await _dbContext.Tasks.Where(t => t.UsersId == user_id).Include(f => f.Tasks_FilterNames).ToListAsync());
+            var tasks = (await _dbContext.Tasks.Where(t => t.UsersId == user_id).Include(f => f.Tasks_FilterNames).ToListAsync());
+
+
+            await getFilterNames(tasks);
+
+            return tasks;
         }
 
         public async Task<Tasks> GetUserTaskById(int id)
@@ -42,35 +62,52 @@ namespace Services.DBServices
 
         public async Task<List<Tasks>> GetUserTasksByDateForDay(int user_id, DateTime date)
         {
-            return (await _dbContext.Tasks
-                .Where(t => 
-                    t.UsersId == user_id 
+            var tasks = await _dbContext.Tasks
+                .Where(t =>
+                    t.UsersId == user_id
                     && t.BeginDate.Date == date.Date
+                    && t.BoolDaySelected == 1
                     )
-                .Include(f => f.Tasks_FilterNames).ToListAsync());
+                .Include(f => f.Tasks_FilterNames).ToListAsync();
+            
+            await getFilterNames(tasks);
+
+            return (tasks);
+
         }
 
         public async Task<List<Tasks>> GetUserTasksByDateForMonth(int user_id, DateTime date)
         {
-            return (await _dbContext.Tasks
+
+            var tasks = await _dbContext.Tasks
                 .Where(t =>
                     t.UsersId == user_id
                     && t.BeginDate.Month == date.Month
                     )
-                .Include(f => f.Tasks_FilterNames).ToListAsync());
+                .Include(f => f.Tasks_FilterNames).ToListAsync();
+
+            await getFilterNames(tasks);
+
+            return (tasks);
         }
 
         public async Task<List<Tasks>> GetUserTasksByDateForWeek(int user_id, DateTime start_date, DateTime end_date)
         {
-            return (await _dbContext.Tasks
+            var tasks = await _dbContext.Tasks
                 .Where(t =>
-                    t.UsersId == user_id
+                    (t.UsersId == user_id
                     && t.BeginDate.Date >= start_date.Date
                     && t.BeginDate.Date <= end_date.Date
-                    && t.EndDate <= end_date.Date
-                    && t.EndDate >= start_date.Date
+                    && t.EndDate.Date <= end_date.Date
+                    && t.EndDate.Date >= start_date.Date)
+                    && (t.BoolWeekSelected == 1
+                    || t.BoolDaySelected == 1)
                     )
-                .Include(f => f.Tasks_FilterNames).ToListAsync());
+                .Include(f => f.Tasks_FilterNames).ToListAsync();
+
+            await getFilterNames(tasks);
+
+            return (tasks);
         }
 
         public async Task<Tasks> PostUserTask(Tasks task)
@@ -80,7 +117,7 @@ namespace Services.DBServices
                 var filter_names = task.Tasks_FilterNames;
                 task.Tasks_FilterNames = null;
 
-               await _dbContext.Tasks.AddAsync(task);
+                await _dbContext.Tasks.AddAsync(task);
                 await _dbContext.SaveChangesAsync();
 
                 filter_names = await _tasks_FilterNamesService.PostTask_FilterNames(task.Id, filter_names);
@@ -104,7 +141,8 @@ namespace Services.DBServices
                 }*/
                 //task = filter_names[0].Tasks;
 
-                return filter_names[0].Tasks;
+                task.Tasks_FilterNames = filter_names;
+                return task;
             }
             catch (Exception ex)
             {
@@ -130,13 +168,21 @@ namespace Services.DBServices
 
                 var filter_names = task.Tasks_FilterNames;
                 //for one filter
-                if (oldtask.Tasks_FilterNames.IsNullOrEmpty() || oldtask.Tasks_FilterNames[0].FilterNames != task.Tasks_FilterNames[0].FilterNames)
+                if (oldtask.Tasks_FilterNames.IsNullOrEmpty() || task.Tasks_FilterNames.IsNullOrEmpty() || oldtask.Tasks_FilterNames[0].FilterNames != task.Tasks_FilterNames[0].FilterNames)
                 {
                     //task.Tasks_FilterNames[0].FilterNames = null;
-                    _dbContext.Tasks_FilterNames.Remove(oldtask.Tasks_FilterNames[0]);
-                    await _dbContext.SaveChangesAsync();
+                    if (!oldtask.Tasks_FilterNames.IsNullOrEmpty())
+                    {
+                        _dbContext.Tasks_FilterNames.Remove(oldtask.Tasks_FilterNames[0]);
+                        await _dbContext.SaveChangesAsync();
 
-                    filter_names = await _tasks_FilterNamesService.PostTask_FilterNames(task.Id, filter_names);
+                    }
+                    if (!task.Tasks_FilterNames.IsNullOrEmpty())
+                    {
+                        filter_names = await _tasks_FilterNamesService.PostTask_FilterNames(task.Id, filter_names);
+                    }
+
+                    
                     
                 }
 
@@ -146,8 +192,8 @@ namespace Services.DBServices
                 //await _dbContext.SaveChangesAsync();
 
 
-                
-                return filter_names[0].Tasks;
+                oldtask.Tasks_FilterNames = filter_names;
+                return oldtask;
             }
             catch (Exception ex)
             {

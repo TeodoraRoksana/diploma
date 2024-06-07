@@ -5,8 +5,9 @@
     </button>
 
     <div class="tasks">
-        <div class="task" *ngFor="let task of dayData.listOfTasks">
+        <!-- <div class="task" *ngFor="let task of dayData.listOfTasks">
             {{task.name}}
-        </div>
+        </div> -->
+        <app-task-cell *ngFor="let task of dayData.listOfTasks" [task]="task"></app-task-cell>
     </div>
 </div>

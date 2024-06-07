@@ -44,6 +44,13 @@ import { WeekCellComponent } from './components/monthly-planning/components-for-
 import { MonthlyPlanningDialogComponent } from './components/monthly-planning/components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { DailyPlanningComponent } from './components/daily-planning/daily-planning.component';
+import { TagDialogComponent } from './components/tag-dialog/tag-dialog.component';
+import { TagEditDialogComponent } from './components/menu/components-for-menu/tag-edit-dialog/tag-edit-dialog.component';
+import { MonthPickerComponent } from './components/monthly-planning/components-for-calendar/monthly-planning-dialog/month-picker/month-picker.component';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { StoreModule } from '@ngrx/store';
+import { tagReducer } from './store/tags/tag.reducer';
+import { TaskCellComponent } from './components/task-cell/task-cell.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +63,10 @@ import { DailyPlanningComponent } from './components/daily-planning/daily-planni
     MonthlyPlanningComponent,
     RegistrationComponent,
     DailyPlanningComponent,
+    TagDialogComponent,
+    TagEditDialogComponent,
+    MonthPickerComponent,
+    TaskCellComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,7 +95,10 @@ import { DailyPlanningComponent } from './components/daily-planning/daily-planni
     IgxInputGroupModule,
     IgxDateTimeEditorModule,
     IgxTextSelectionModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
 
+    StoreModule.forRoot({ tags: tagReducer }),
     SocialLoginModule,
   ],
   providers: [

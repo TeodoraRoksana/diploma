@@ -11,13 +11,24 @@ import { Tag } from '../models/tag';
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService {
-  private url = "https://localhost:7142/Tag/";
+export class TagService {
+  private url = "https://localhost:7142/FilterNames";
 
   constructor(private http: HttpClient) { }
 
   public getTagByUserId(userId: number) : Observable<Tag[]>{
-    return this.http.post<Tag[]>(`${this.url}LogIn`, userId); // change
+    return this.http.get<Tag[]>(`${this.url}` + '?user_id=' + userId); // change
   }
 
+  public postTag(tag: Tag) : Observable<Tag>{
+    return this.http.post<Tag>(`${this.url}`, tag);
+  }
+
+  public putTag(tag: Tag) : Observable<Tag>{
+    return this.http.put<Tag>(`${this.url}`, tag)
+  }
+
+  public deleteTag(id: number) : Observable<Tag>{
+    return this.http.delete<Tag>(`${this.url}` + '?id=' +  id)
+  }
 }

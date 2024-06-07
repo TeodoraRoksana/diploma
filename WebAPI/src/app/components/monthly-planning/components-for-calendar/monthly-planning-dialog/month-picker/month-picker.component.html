@@ -1,0 +1,13 @@
+<mat-form-field *ngIf="task.mode == 'month'">
+    <mat-label>Choose month and year</mat-label>
+    <input #monthPicker matInput [matDatepicker]="dp" [(ngModel)]="task.beginDate" [(ngModel)]="task.endDate"
+        [formControl]="dateStartFormControl">
+    <mat-hint></mat-hint>
+    <mat-error *ngIf="dateStartFormControl.hasError('required')">
+        Select month
+    </mat-error>
+    <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp startView="multi-year" (monthSelected)="setMonthAndYear($event, dp)"
+        panelClass="example-month-picker">
+    </mat-datepicker>
+</mat-form-field>

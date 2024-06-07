@@ -34,10 +34,13 @@ export class DayCellComponent {
 
   openDialog(/*date: Date*/): void {
     //let dateForForm = date;
-    
+    this.taskFromDialog.mode = this.mode;
+    this.taskFromDialog.beginDate = this.dayData.date;
+    this.taskFromDialog.endDate = this.dayData.date;
+
     const dialogRef = this.dialog.open
     (MonthlyPlanningDialogComponent, {
-      data: {mode: this.mode, date: this.dayData.date},
+      data: this.taskFromDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {

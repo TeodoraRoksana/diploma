@@ -29,6 +29,11 @@ h1{
     } */
 }
 
+.tree-filters{
+    max-height: 150px;
+    overflow: auto;
+}
+
 .filters{
     margin-top: 48px;
 }
@@ -36,7 +41,7 @@ h1{
 .filter-add{
     font-size: 18px;
     
-    border: 1px solid var(--border-color);
+    box-shadow: 0 0 4px var(--border-color);
     border-radius: 8px;
     /* height: 20px; */
     display: flex;
@@ -44,4 +49,30 @@ h1{
     align-items: center;
     color: var(--text-color) !important; 
     background-color: rgba(97, 235, 139, 0.795);
+}
+
+.mat-mdc-menu-item {
+    color: var(--text-color) !important;
+}
+
+.tag-button{
+    position: relative;
+
+    &:hover .filter-edit{
+        opacity: 1;
+    }
+}
+
+.filter-edit{
+    top: 0px;
+    position: absolute;
+    right: 4px;
+    color: var(--text-color) !important; 
+    opacity: 0;
+    transition: opacity .2s;
+    border-radius: 1000px;
+
+    &:hover{
+        background: rgba(0, 0, 0, .04);
+    }
 }

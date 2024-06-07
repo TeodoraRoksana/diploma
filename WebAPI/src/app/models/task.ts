@@ -9,7 +9,6 @@ export class Task{
     public userId = 0;
     public mode = '';
     public important = false;
-    public timeSelected = false;
  
-    public tag!:Tag;
+    public tag?:Tag | null = null;
 }

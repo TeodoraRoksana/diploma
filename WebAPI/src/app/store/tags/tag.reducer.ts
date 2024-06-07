@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { Tag } from "src/app/models/tag";
-import { addTag, deleteTag } from "./tag.actions";
+import { addTag, deleteTag, setListOfTags } from "./tag.actions";
 
 
 export interface TagState{
@@ -24,5 +24,9 @@ export const tagReducer = createReducer(
     on(deleteTag, (state, { id }) => ({
         ...state,
         tags: state.tags.filter((tag) => tag.id != id),
+    })),
+    on(setListOfTags, (state, { tags }) => ({
+        ...state,
+        tags: tags,
     })),
 );
