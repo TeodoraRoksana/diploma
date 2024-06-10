@@ -1,0 +1,142 @@
+app-week-cell:last-child{
+    & .week {
+        height: 100%;
+    }
+    & .cell{
+        border-bottom: 1px solid var(--border-color);
+        height: 100%;
+    }
+}
+
+.name-week-days{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    & div{
+        width: 100%;
+        text-align: center;
+        min-width: 100px;
+        font-weight: 400;
+        padding-bottom: 5px;
+    }
+}
+
+.name-of-week{
+    text-align: right;
+    margin: 0;
+    width: 100%;
+}
+
+.calendarButtons{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+
+    width: 100%;
+    justify-content: flex-end;
+    min-width: 700px;
+
+    padding-bottom: 10px;
+}
+
+.navigateForWeek{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.addTask{
+    padding-left: 20px;
+}
+
+a{
+    /* font-weight: bold; */
+    cursor: pointer;
+    user-select: none;
+}
+
+.weekly{
+    padding: 0 100px;
+    min-width: 700px;
+    display: flex;
+    gap: 20px;
+    height: 600px;
+}
+
+.calendar {
+    flex-grow: 7;
+    display: flex;
+    flex-direction: column;
+
+    & app-week-cell {
+        display: block;
+        height: 100%;
+    }
+}
+
+.side-col {
+    flex-grow: 1;
+    max-width: calc((100% - 20px) / 8);
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+
+    & h2 {
+        text-align: center;
+        margin: 0;
+        margin-top: 46px;
+        margin-bottom: 5px;
+        font-size: inherit;
+        white-space: nowrap;
+    }
+}
+
+.tasks-for-week {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    min-width: 100px;
+    height: 100%;
+    border: 1px solid var(--border-color);
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.tasks-for-week {
+    padding: 0;
+    gap: 0;
+
+    & .week {
+        height: 130px;
+        box-sizing: border-box;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    & .week + .week {
+        border-top: 1px solid var(--border-color);
+    }
+}
+
+.task{
+    width: 100%;
+    
+}
+
+.mdc-button {
+    min-width: auto;
+    padding: 0;
+    margin: 0;
+    aspect-ratio: 1 /1 ;
+    background: white;
+}
+
+.mat-mdc-outlined-button>.mat-icon {
+    margin: 0;
+    vertical-align: middle;
+    color: var(--text-color);
+}

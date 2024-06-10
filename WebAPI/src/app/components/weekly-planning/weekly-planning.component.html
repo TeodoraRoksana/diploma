@@ -1,0 +1,34 @@
+<app-menu></app-menu>
+
+<div class="weekly">
+    <div class="calendar">
+        <div class="calendarButtons">
+            <h2 class="name-of-week">{{formatMonthView()}}</h2>
+            <div class="navigateForWeek">
+                <button mat-stroked-button (click)="goWeek(-1)">
+                    <mat-icon>keyboard_arrow_left</mat-icon>
+                </button>
+                <a (click)="today()">Today</a>
+                <button mat-stroked-button (click)="goWeek(1)">
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </button>
+            </div>
+            <button class="addTask" mat-stroked-button (click)="openDialog()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div class="name-week-days">
+            <div *ngFor="let name of listOfNames">{{name}}</div>
+        </div>
+        <app-week-cell (sortTasks)="processTasksToDays()" [listOfDays]="days"></app-week-cell>
+    </div>
+    <div class="forWeek side-col">
+        <h2>This Week</h2>
+        <div class="tasks-for-week">
+            <div class="week">
+                <app-task-cell (sortTasks)="processTasksToDays()" class="task" *ngFor="let task of weekTasks" [task]="task"
+                    [refreshPageFunctoin]="fetchWeek"></app-task-cell>
+            </div>
+        </div>
+    </div>
+</div>
