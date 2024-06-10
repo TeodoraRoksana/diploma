@@ -124,6 +124,8 @@ export class WeeklyPlanningComponent {
     .subscribe({
       next: (result: Task[]) => {
         this.generalListOfTasks = result;
+        this.filtredListOfTasks = result;
+        this.processTasksToDays();
       },
       error: ({ error, message, status } : HttpErrorResponse) => {
         console.log('Unknown error:', error);

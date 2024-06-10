@@ -82,7 +82,8 @@ namespace Services.DBServices
             var tasks = await _dbContext.Tasks
                 .Where(t =>
                     t.UsersId == user_id
-                    && t.BeginDate.Month == date.Month
+                    && (t.BeginDate.Month == date.Month
+                    || t.EndDate.Month == date.Month)
                     )
                 .Include(f => f.Tasks_FilterNames).ToListAsync();
 

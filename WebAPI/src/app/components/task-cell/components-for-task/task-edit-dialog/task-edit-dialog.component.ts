@@ -102,6 +102,8 @@ export class TaskEditDialogComponent {
   @ViewChild('dateMode') dateMode!: ElementRef;
   @ViewChild('monthPicker') monthPicker!: ElementRef;
  
+  currentTask = new Task;
+
   listOfTags!: Tag[];
   hideRequired='true';
   selectedMode = '';
@@ -142,9 +144,23 @@ export class TaskEditDialogComponent {
       }
     });
     
-    this.modeFormControl.setValue(this.taskData.mode);
-    if(this.taskData.tag)
-      this.tagFormControl.setValue(this.listOfTags.filter(t => t.id == this.taskData.tag?.id)[0]);
+    this.copyTask(this.currentTask, this.taskData);
+
+    this.modeFormControl.setValue(this.currentTask.mode);
+    if(this.currentTask.tag)
+      this.tagFormControl.setValue(this.listOfTags.filter(t => t.id == this.currentTask.tag?.id)[0]);
+  }
+
+  copyTask(task1: Task, task2: Task){
+    task1.id = task2.id;
+    task1.name = task2.name;
+    task1.beginDate = task2.beginDate;
+    task1.endDate = task2.endDate;
+    task1.important = task2.important;
+    task1.mode = task2.mode;
+    task1.note = task2.note;
+    task1.tag = task2.tag;
+    task1.userId = task2.userId;
   }
 
   onNoClick(): void {
@@ -152,8 +168,6 @@ export class TaskEditDialogComponent {
   }
 
   save(){
-    console.log(this.taskData);
-    
     if(
       [
         this.nameFormControl,
@@ -167,25 +181,23 @@ export class TaskEditDialogComponent {
       // this.taskData.beginDate = MonthlyPlanningDialogComponent.toISODate(this.taskData.beginDate!)
       // this.taskData.endDate = MonthlyPlanningDialogComponent.toISODate(this.taskData.endDate!)
       // console.log("1: ", this.taskData);
+    console.log(this.taskData);
+    this.copyTask(this.taskData, this.currentTask);
       
-      this.taskService
-      .putTask(this.taskData)
-      .subscribe({
-        next: (result: Task) => {
-          console.log("2: ", result);
-
-          this.taskData = result;
-          this.dialogRef.close(this.taskData);
-        },
-        error: ({ error, message, status } : HttpErrorResponse) => {
-            console.log('Unknown error:', error);
-        }
-      });
+    this.taskService
+    .putTask(this.taskData)
+    .subscribe({
+      next: (result: Task) => {
+        this.taskData = result;
+        this.dialogRef.close(this.taskData);
+      },
+      error: ({ error, message, status } : HttpErrorResponse) => {
+          console.log('Unknown error:', error);
+      }
+    });
   }
 
   onSelectedDateMode(){
-    console.log("6");
-
-    // this.dateStartFormControl.setValue(null);
+    this.dateStartFormControl.setValue(null);
   }
 }

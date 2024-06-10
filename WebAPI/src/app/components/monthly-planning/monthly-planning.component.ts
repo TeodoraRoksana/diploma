@@ -30,8 +30,8 @@ export class MonthlyPlanningComponent {
   monthTasks: Task[] = [];
   weekTasks: Task[] = [];
   tasksByWeeks: {
-    start: number,
-    end: number,
+    start: Date,
+    end: Date,
     tasks: Task[],
   }[] = [];
   dayTasks: Task[] = [];
@@ -76,7 +76,7 @@ export class MonthlyPlanningComponent {
     this.filtredListOfTasks = this.generalListOfTasks
 
     this.monthTasks = this.filtredListOfTasks.filter(t => t.mode == "month" && this.belongsToThisMonth(t.beginDate!));
-    this.weekTasks = this.filtredListOfTasks.filter(t => t.mode == "week" && this.belongsToThisMonth(t.beginDate!));
+    this.weekTasks = this.filtredListOfTasks.filter(t => t.mode == "week" && (this.belongsToThisMonth(t.beginDate!) || this.belongsToThisMonth(t.endDate!)));
     this.dayTasks = this.filtredListOfTasks.filter(t => t.mode == "day" && this.belongsToThisMonth(t.beginDate!));
 
     this.dayTasksMap = this.dayTasks.reduce((acc, v) => {
@@ -116,12 +116,12 @@ export class MonthlyPlanningComponent {
       const key = MonthlyPlanningComponent.removeTime(firstDayOfTheWeek.date).getTime()
       const tasks = this.weekTasksMap.get(key)
       
-      const start = firstDayOfTheWeek.date.getDate()
+      const start = firstDayOfTheWeek.date;
       const end = new Date(
         firstDayOfTheWeek.date.getFullYear(),
         firstDayOfTheWeek.date.getMonth(),
         firstDayOfTheWeek.date.getDate() + 6
-      ).getDate()
+      );
 
       if (tasks) {
         this.tasksByWeeks.push({ start, end, tasks })
@@ -182,10 +182,13 @@ export class MonthlyPlanningComponent {
     return this.currentDate.toLocaleString('en-US', { month: 'long' }) + ' ' + (y == this.year ? '' : y)
   }
 
-  openDialog(): void {
-    //let dateForForm = date;
-    
-    console.log("[monthly] ", this.taskFromDialog);
+  openDialog(mode?: string, beginDate?: Date, endDate?: Date): void {
+    if(mode)
+      this.taskFromDialog.mode = mode;
+    if(beginDate && endDate){
+      this.taskFromDialog.beginDate = new Date(beginDate);
+      this.taskFromDialog.endDate = new Date(endDate);
+    }
     const dialogRef = this.dialog.open
     (MonthlyPlanningDialogComponent, {
       data: this.taskFromDialog,
@@ -193,7 +196,7 @@ export class MonthlyPlanningComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if(!result){ //fine?
-        this.taskFromDialog = new Task;
+        this.taskFromDialog = new Task();
         this.taskFromDialog.tag = null;
         return;
       }
@@ -201,12 +204,15 @@ export class MonthlyPlanningComponent {
       this.taskFromDialog = result; 
       // console.log("taskFromDialog ", this.taskFromDialog);
       
-      if (this.belongsToThisMonth(this.taskFromDialog.beginDate!)) {
+      if (this.belongsToThisMonth(this.taskFromDialog.beginDate!) || this.belongsToThisMonth(this.taskFromDialog.endDate!)) {
         this.generalListOfTasks.push(this.taskFromDialog);
+        
         this.sortViewTasks()
       }
 
-      this.taskFromDialog = new Task;
+      console.log(this.generalListOfTasks);
+
+      this.taskFromDialog = new Task();
       this.taskFromDialog.tag = null;
 
     });

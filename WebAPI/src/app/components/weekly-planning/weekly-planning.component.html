@@ -25,6 +25,9 @@
     <div class="forWeek side-col">
         <h2>This Week</h2>
         <div class="tasks-for-week">
+            <button mat-icon-button class="add-week-task" (click)="openDialog()">
+                <mat-icon>add</mat-icon>
+            </button>
             <div class="week">
                 <app-task-cell (sortTasks)="processTasksToDays()" class="task" *ngFor="let task of weekTasks" [task]="task"
                     [refreshPageFunctoin]="fetchWeek"></app-task-cell>

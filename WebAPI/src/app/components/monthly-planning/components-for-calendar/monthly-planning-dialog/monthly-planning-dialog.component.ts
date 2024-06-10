@@ -129,6 +129,8 @@ export class MonthlyPlanningDialogComponent {
   nameFormControl = new FormControl('', [Validators.required]);
   modeFormControl = new FormControl('', [Validators.required]);
   dateStartFormControl = new FormControl(moment(), [Validators.required]);
+  dateStartInWeekFormControl = new FormControl(new Date, [Validators.required]);
+  dateEndInWeekFormControl = new FormControl(new Date, [Validators.required]);
 
   matcher = new MyErrorStateMatcher();
 
@@ -137,43 +139,6 @@ export class MonthlyPlanningDialogComponent {
     {value: 'week', viewValue: 'Week'},
     {value: 'month', viewValue: 'Month'},    
   ];
-
-  // range = new FormGroup({
-  //   start: new FormControl('', [Validators.required]),
-  //   end: new FormControl('', [Validators.required]),
-  // });
-
-  // disabled = false;
-
-  // formControlItem: FormControl = new FormControl('');
-  // maxTime: DateTime = DateTime.local().set({
-  //   hour: 16,
-  // });
-  // minTime: DateTime = DateTime.local().set({
-  //   hour: 14,
-  // });
-  // required: boolean = !1;
-  
-  // @ViewChild('timepicker') timepicker: any;
-
-  // openFromIcon(timepicker: { open: () => void }) {
-  //   if (!this.formControlItem.disabled) {
-  //     timepicker.open();
-  //   }
-  // }
-   
-  // onClear($event: Event) {
-  //   this.formControlItem.setValue(null);
-  // }
-
-  //separatorKeysCodes: number[] = [ENTER, COMMA];
-  //tagsCtrl = new FormControl('');
-  //tags: string[] = [];
-  //allTags: string[] = ['Home', 'Study'];
-
-  //@ViewChild('tagsInput') tagsInput: ElementRef<HTMLInputElement>;
-
-  //announcer = Inject(LiveAnnouncer);
 
   constructor(
     public dialogRef: MatDialogRef<MonthlyPlanningDialogComponent>,
@@ -195,10 +160,10 @@ export class MonthlyPlanningDialogComponent {
         console.log('Tag get from store error:', error);
       }
     });
-    if(taskData.mode == 'day'){
-      this.modeFormControl.setValue('day');
-    }
-    
+      this.modeFormControl.setValue(taskData.mode);
+      this.dateStartInWeekFormControl.setValue(taskData.beginDate);
+      this.dateEndInWeekFormControl.setValue(taskData.endDate);
+      
   }
 
   onNoClick(): void {
@@ -206,15 +171,16 @@ export class MonthlyPlanningDialogComponent {
   }
 
   save(){
-    console.log(this.taskData);
-    
     if(
       [
         this.nameFormControl,
         this.modeFormControl,
-        this.dateStartFormControl
       ]
-      .some(control => control.invalid)
+      .some(control => control.invalid) || 
+        this.dateStartFormControl.invalid &&
+        (this.dateStartInWeekFormControl.invalid ||
+        this.dateEndInWeekFormControl.invalid)
+      
       )
       return;
       this.taskData.userId = 1; //store userId

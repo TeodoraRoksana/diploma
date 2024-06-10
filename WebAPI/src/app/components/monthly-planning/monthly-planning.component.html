@@ -1,11 +1,19 @@
 <app-menu></app-menu>
 
 <div class="monthly">
-    <div class="month side-col">
+    <div class="side-col">
         <h2>This Month</h2>
-        <div class="task-for-month">
-            <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of monthTasks" [task]="task"
-                [refreshPageFunctoin]="fetchMonth"></app-task-cell>
+        
+        <div class="month">
+            <button mat-icon-button class="add-week-task" (click)="openDialog('month')">
+                <mat-icon>add</mat-icon>
+            </button>
+            <div>
+                <div class="tasks">
+                    <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of monthTasks" [task]="task"
+                        [refreshPageFunctoin]="fetchMonth"></app-task-cell>
+                </div>
+            </div>
         </div>
     </div>
     <div class="calendar">
@@ -34,13 +42,19 @@
         <h2>These Weeks</h2>
         <div class="tasks-for-weeks">
             <div class="week" *ngFor="let week of tasksByWeeks">
-                <div>
-                    <div>
-                        {{week.start}}-{{week.end}}
-                    </div>
+                <div class="week-controls">
+                    <p>
+                        <span>{{week.start.getDate()}}-{{week.end.getDate()}}</span>
+                    </p>
+                    <button mat-icon-button class="add-week-task" (click)="openDialog('week', week.start, week.end)">
+                        <mat-icon>add</mat-icon>
+                    </button>
                 </div>
-                <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of week.tasks" [task]="task"
-                    [refreshPageFunctoin]="fetchMonth"></app-task-cell>
+
+                <div class="tasks">
+                    <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of week.tasks"
+                        [task]="task" [refreshPageFunctoin]="fetchMonth"></app-task-cell>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,9 @@
 <div class="cell {{dayData.greyed ? 'greyed' : ''}}">
-    <p> {{dayData.date.getDate()}} </p>
+    <p>
+        <span>
+            {{dayData.date.getDate()}}
+        </span>
+    </p>
     <button mat-icon-button (click)="openDialog()">
         <mat-icon>add</mat-icon>
     </button>

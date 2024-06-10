@@ -30,7 +30,7 @@ export class DayCellComponent {
   @Output() sortTasks = new EventEmitter<void>();
 
   mode:string = 'day';
-  taskFromDialog = new Task;
+  taskFromDialog = new Task();
 
   constructor(public dialog: MatDialog) {}
 
@@ -54,9 +54,15 @@ export class DayCellComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log('The dialog was closed');
+      if(result == null){
+        this.taskFromDialog = new Task();
+        this.taskFromDialog.tag = null;
+        return;
+      }
 
-      if(result != null)
-        this.dayData.listOfTasks.push(result);
+      this.dayData.listOfTasks.push(result);
+      this.taskFromDialog = new Task();
+      this.taskFromDialog.tag = null;
     
       
     });
