@@ -10,5 +10,5 @@ export class Task{
     public mode = '';
     public important = false;
  
-    public tag?:Tag | null = null;
+    public tag:Tag | null = null;
 }

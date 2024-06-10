@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { NgFor } from '@angular/common';
@@ -26,11 +26,18 @@ export class DayCellComponent {
   
   @Input()  
   dayData! : Day;
+  
+  @Output() sortTasks = new EventEmitter<void>();
 
   mode:string = 'day';
   taskFromDialog = new Task;
 
   constructor(public dialog: MatDialog) {}
+
+  sortViewTasks(){
+    console.log('day emit');
+    this.sortTasks.emit()
+  }
 
   openDialog(/*date: Date*/): void {
     //let dateForForm = date;
@@ -38,14 +45,17 @@ export class DayCellComponent {
     this.taskFromDialog.beginDate = this.dayData.date;
     this.taskFromDialog.endDate = this.dayData.date;
 
+    console.log("[day-cell] ", this.taskFromDialog);
+    
     const dialogRef = this.dialog.open
     (MonthlyPlanningDialogComponent, {
       data: this.taskFromDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if(result.Name != '')
+      //console.log('The dialog was closed');
+
+      if(result != null)
         this.dayData.listOfTasks.push(result);
     
       

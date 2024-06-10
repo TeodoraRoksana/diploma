@@ -1,29 +1,47 @@
-
-
 <app-menu></app-menu>
 
-
-<div class="calendar">
-    <div class="calendarButtons">
-        <h2>{{monthName}}</h2>
-        <div class="navigateForMonth">
-            <button mat-stroked-button (click)="nextMonth(-1)">
-                <mat-icon>keyboard_arrow_left</mat-icon>
-            </button>
-            <a (click)="today()">Today</a>
-            <button mat-stroked-button (click)="nextMonth(1)">
-                <mat-icon>keyboard_arrow_right</mat-icon>
+<div class="monthly">
+    <div class="month side-col">
+        <h2>This Month</h2>
+        <div class="task-for-month">
+            <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of monthTasks" [task]="task"
+                [refreshPageFunctoin]="fetchMonth"></app-task-cell>
+        </div>
+    </div>
+    <div class="calendar">
+        <div class="calendarButtons">
+            <h2 class="name-of-month">{{monthName}}</h2>
+            <div class="navigateForMonth">
+                <button mat-stroked-button (click)="nextMonth(-1)">
+                    <mat-icon>keyboard_arrow_left</mat-icon>
+                </button>
+                <a (click)="today()">Today</a>
+                <button mat-stroked-button (click)="nextMonth(1)">
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </button>
+            </div>
+            <button class="addTask" mat-stroked-button (click)="openDialog()">
+                <mat-icon>add</mat-icon>
             </button>
         </div>
-        <button class="addTask" mat-stroked-button (click)="openDialog()">
-            <mat-icon>add</mat-icon>
-        </button>
+        <div class="name-week-days">
+            <div *ngFor="let name of listOfNames">{{name}}</div>
+        </div>
+        <app-week-cell (sortTasks)="sortViewTasks()" *ngFor="let week of daysOfMonthWeek"
+            [listOfDays]="week"></app-week-cell>
     </div>
-    <div class="name-week-days">
-        <div *ngFor="let name of listOfNames">{{name}}</div>
+    <div class="weeks side-col">
+        <h2>These Weeks</h2>
+        <div class="tasks-for-weeks">
+            <div class="week" *ngFor="let week of tasksByWeeks">
+                <div>
+                    <div>
+                        {{week.start}}-{{week.end}}
+                    </div>
+                </div>
+                <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of week.tasks" [task]="task"
+                    [refreshPageFunctoin]="fetchMonth"></app-task-cell>
+            </div>
+        </div>
     </div>
-    <app-week-cell *ngFor="let week of daysOfMonthWeek" [listOfDays]="week"></app-week-cell>
 </div>
-
-<app-task-cell *ngFor="let task of monthTasks" [task]="task"></app-task-cell>
-

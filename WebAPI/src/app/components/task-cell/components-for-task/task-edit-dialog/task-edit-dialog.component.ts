@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, Inject, Injectable } from '@angular/core';
+import { Component, ElementRef, ViewChild, Inject, Injectable, Output, EventEmitter } from '@angular/core';
 import {NgFor, AsyncPipe} from '@angular/common';
 import {
   FormGroup,
@@ -41,12 +41,12 @@ import { selectTagsFromStore } from 'src/app/store/tags/tag.selectors';
 import { Tag } from 'src/app/models/tag';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskService } from 'src/app/services/task.service';
+import { MonthlyPlanningDialogComponent } from 'src/app/components/monthly-planning/components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (
-      // control.dirty || control.touched || 
       isSubmitted));
   }
 }
@@ -83,41 +83,22 @@ interface Modes{
   value: string;
   viewValue: string;
 }
-
-// export const MY_FORMATS = {
-//   parse: {
-//     dateInput: 'MM/YYYY',
-//   },
-//   display: {
-//     dateInput: 'MM/YYYY',
-//     monthYearLabel: 'MMM YYYY',
-//     dateA11yLabel: 'LL',
-//     monthYearA11yLabel: 'MMMM YYYY',
-//   },
-// };
 export declare const COMMA = 188;
 export declare const ENTER = 13;
 const moment = _rollupMoment || _moment;
 
-
 @Component({
-  selector: 'app-monthly-planning-dialog',
-  templateUrl: './monthly-planning-dialog.component.html',
-  styleUrls: ['./monthly-planning-dialog.component.css'],
+  selector: 'app-task-edit-dialog',
+  templateUrl: './task-edit-dialog.component.html',
+  styleUrls: ['./task-edit-dialog.component.css'],
   providers: [
     {
       provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
       useClass: WeekRangeSelectionStrategy,
     },
-    // {
-    //   provide: DateAdapter, useValue: new LuxonDateAdapter('en-GB',{
-    //     firstDayOfWeek: 1,
-    //     useUtc: true
-    //   })
-    // }
-  ],
+  ]
 })
-export class MonthlyPlanningDialogComponent {
+export class TaskEditDialogComponent {
   @ViewChild('dateMode') dateMode!: ElementRef;
   @ViewChild('monthPicker') monthPicker!: ElementRef;
  
@@ -129,6 +110,7 @@ export class MonthlyPlanningDialogComponent {
   nameFormControl = new FormControl('', [Validators.required]);
   modeFormControl = new FormControl('', [Validators.required]);
   dateStartFormControl = new FormControl(moment(), [Validators.required]);
+  tagFormControl = new FormControl(new Tag(), [Validators.required]);
 
   matcher = new MyErrorStateMatcher();
 
@@ -138,67 +120,31 @@ export class MonthlyPlanningDialogComponent {
     {value: 'month', viewValue: 'Month'},    
   ];
 
-  // range = new FormGroup({
-  //   start: new FormControl('', [Validators.required]),
-  //   end: new FormControl('', [Validators.required]),
-  // });
-
-  // disabled = false;
-
-  // formControlItem: FormControl = new FormControl('');
-  // maxTime: DateTime = DateTime.local().set({
-  //   hour: 16,
-  // });
-  // minTime: DateTime = DateTime.local().set({
-  //   hour: 14,
-  // });
-  // required: boolean = !1;
-  
-  // @ViewChild('timepicker') timepicker: any;
-
-  // openFromIcon(timepicker: { open: () => void }) {
-  //   if (!this.formControlItem.disabled) {
-  //     timepicker.open();
-  //   }
-  // }
-   
-  // onClear($event: Event) {
-  //   this.formControlItem.setValue(null);
-  // }
-
-  //separatorKeysCodes: number[] = [ENTER, COMMA];
-  //tagsCtrl = new FormControl('');
-  //tags: string[] = [];
-  //allTags: string[] = ['Home', 'Study'];
-
-  //@ViewChild('tagsInput') tagsInput: ElementRef<HTMLInputElement>;
-
-  //announcer = Inject(LiveAnnouncer);
-
   constructor(
-    public dialogRef: MatDialogRef<MonthlyPlanningDialogComponent>,
+    public dialogRef: MatDialogRef<TaskEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public taskData: Task,
     private _adapter: DateAdapter<any>,
     private store:Store<AppState>,
     private taskService:TaskService
-    ) {
-      
-    _adapter.getFirstDayOfWeek = () => 1;
+    ) {}
 
-    store.select(selectTagsFromStore)
+  ngOnInit() {
+    this._adapter.getFirstDayOfWeek = () => 1;
+
+    this.store.select(selectTagsFromStore)
     .subscribe({
       next: (result: Tag[]) => {
         this.listOfTags = result;
-        //result.forEach(t => this.listOfTags.push(Object.assign({}, t)));
+        
       },
       error: ({ error, message, status } : HttpErrorResponse) => {
         console.log('Tag get from store error:', error);
       }
     });
-    if(taskData.mode == 'day'){
-      this.modeFormControl.setValue('day');
-    }
     
+    this.modeFormControl.setValue(this.taskData.mode);
+    if(this.taskData.tag)
+      this.tagFormControl.setValue(this.listOfTags.filter(t => t.id == this.taskData.tag?.id)[0]);
   }
 
   onNoClick(): void {
@@ -217,40 +163,29 @@ export class MonthlyPlanningDialogComponent {
       .some(control => control.invalid)
       )
       return;
-      this.taskData.userId = 1; //store userId
-      this.taskData.beginDate! = MonthlyPlanningDialogComponent.toISODate(this.taskData.beginDate!)
-      this.taskData.endDate = MonthlyPlanningDialogComponent.toISODate(this.taskData.endDate!)
-
+      // this.taskData.userId = 1; //store userId
+      // this.taskData.beginDate = MonthlyPlanningDialogComponent.toISODate(this.taskData.beginDate!)
+      // this.taskData.endDate = MonthlyPlanningDialogComponent.toISODate(this.taskData.endDate!)
+      // console.log("1: ", this.taskData);
+      
       this.taskService
-      .postTask(this.taskData)
+      .putTask(this.taskData)
       .subscribe({
         next: (result: Task) => {
+          console.log("2: ", result);
+
           this.taskData = result;
           this.dialogRef.close(this.taskData);
         },
         error: ({ error, message, status } : HttpErrorResponse) => {
-          // if (error == errorData.TagNameAlreadyExist) {
-          //   console.log('Fuck mate, find you!', error);
-          //   this.tag_name_hint = "tag's name already exists!";
-          //   this.tagNameFormControl.setErrors({tagExists: true});
-          // } else {
             console.log('Unknown error:', error);
-            //this.tag_name_hint = 'Unknown error:' + error;
-          //}
         }
       });
-
-      //this.dialogRef.close(this.taskData);
   }
 
   onSelectedDateMode(){
-    this.dateStartFormControl.setValue(null);
-  }
+    console.log("6");
 
-  static toISODate(date: Date) {
-    const d = new Date(date)
-    const tz = d.getTimezoneOffset() * 60 * 1000
-    const ms = d.getTime()
-    return new Date(ms - tz)
+    // this.dateStartFormControl.setValue(null);
   }
 }

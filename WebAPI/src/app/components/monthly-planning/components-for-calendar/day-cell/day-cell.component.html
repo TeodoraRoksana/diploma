@@ -8,6 +8,6 @@
         <!-- <div class="task" *ngFor="let task of dayData.listOfTasks">
             {{task.name}}
         </div> -->
-        <app-task-cell *ngFor="let task of dayData.listOfTasks" [task]="task"></app-task-cell>
+        <app-task-cell (sortTasks)="sortViewTasks()" *ngFor="let task of dayData.listOfTasks" [task]="task"></app-task-cell>
     </div>
 </div>

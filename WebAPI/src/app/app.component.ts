@@ -23,7 +23,7 @@ export class AppComponent {
     .subscribe({
       next: (tags: Tag[]) => {
         this.store.dispatch(setListOfTags({ tags }));
-        console.log("get tag!", tags);
+        // console.log("get tag!", tags);
         
       },
       error: ({ error, message, status } : HttpErrorResponse) => {
@@ -31,6 +31,6 @@ export class AppComponent {
       }
     });
     
-    this.store.subscribe((snapshot) => console.log(snapshot));
+    // this.store.subscribe((snapshot) => console.log(snapshot));
   }
 }

@@ -18,7 +18,7 @@ app-week-cell:last-child{
     }
 }
 
-h2{
+.name-of-month{
     text-align: right;
     margin: 0;
     width: 100%;
@@ -53,8 +53,74 @@ a{
     user-select: none;
 }
 
-.calendar{
-    padding: 0 200px 0 64px;
+.monthly{
+    padding: 0 100px;
+    min-width: 700px;
+    display: flex;
+    gap: 20px;
+}
+
+.calendar {
+    flex-grow: 7;
+}
+
+.side-col {
+    flex-grow: 1;
+    max-width: calc((100% - 40px) / 9);
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+
+    & h2 {
+        text-align: center;
+        margin: 0;
+        margin-top: 46px;
+        margin-bottom: 5px;
+        font-size: inherit;
+        white-space: nowrap;
+    }
+}
+
+.task-for-month,
+.tasks-for-weeks {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    min-width: 100px;
+    height: 100%;
+    border: 1px solid var(--border-color);
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.task-for-month {
+    box-sizing: border-box;
+}
+
+.tasks-for-weeks {
+    padding: 0;
+    gap: 0;
+    & .week {
+        height: 130px;
+        box-sizing: border-box;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    & .week + .week {
+        border-top: 1px solid var(--border-color);
+    }
+}
+
+/* app-task-cell {
+    min-height: 40px;
+} */
+
+.task{
+    width: 100%;
+    
 }
 
 .mdc-button {

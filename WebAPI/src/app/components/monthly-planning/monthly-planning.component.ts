@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, SimpleChanges } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { NgFor } from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
@@ -29,8 +29,14 @@ export class MonthlyPlanningComponent {
 
   monthTasks: Task[] = [];
   weekTasks: Task[] = [];
+  tasksByWeeks: {
+    start: number,
+    end: number,
+    tasks: Task[],
+  }[] = [];
   dayTasks: Task[] = [];
   dayTasksMap?: Map<number, Task[]>;
+  weekTasksMap?: Map<number, Task[]>;
 
   taskByDate = new TaskByDate();
 
@@ -65,8 +71,13 @@ export class MonthlyPlanningComponent {
   }
 
   sortViewTasks(){
-    this.monthTasks = this.filtredListOfTasks.filter(t => t.mode == "month");
-    this.dayTasks = this.filtredListOfTasks.filter(t => t.mode == "day");
+    console.log('month call');
+
+    this.filtredListOfTasks = this.generalListOfTasks
+
+    this.monthTasks = this.filtredListOfTasks.filter(t => t.mode == "month" && this.belongsToThisMonth(t.beginDate!));
+    this.weekTasks = this.filtredListOfTasks.filter(t => t.mode == "week" && this.belongsToThisMonth(t.beginDate!));
+    this.dayTasks = this.filtredListOfTasks.filter(t => t.mode == "day" && this.belongsToThisMonth(t.beginDate!));
 
     this.dayTasksMap = this.dayTasks.reduce((acc, v) => {
       const key = MonthlyPlanningComponent.removeTime(v.beginDate!).getTime()
@@ -77,7 +88,16 @@ export class MonthlyPlanningComponent {
       return acc
     }, new Map<number, Task[]>())
 
-    console.log('Map', [...this.dayTasksMap.entries()]);
+    this.weekTasksMap = this.weekTasks.reduce((acc, v) => {
+      const key = MonthlyPlanningComponent.removeTime(v.beginDate!).getTime()
+      const tasks = acc.get(key)
+      tasks
+        ? tasks.push(v)
+        : acc.set(key, [v])
+      return acc
+    }, new Map<number, Task[]>())
+
+    // console.log('Map', [...this.dayTasksMap.entries()]);
 
     for (const day of this.daysOfMonthWeek.flat(2)) {
       const key = MonthlyPlanningComponent.removeTime(day.date).getTime()
@@ -85,6 +105,28 @@ export class MonthlyPlanningComponent {
       
       if (tasks) {
         day.listOfTasks = tasks
+      } else {
+        day.listOfTasks = []
+      }
+    }
+    
+    this.tasksByWeeks = []
+    for (const week of this.daysOfMonthWeek) {
+      const firstDayOfTheWeek = week.at(0)!
+      const key = MonthlyPlanningComponent.removeTime(firstDayOfTheWeek.date).getTime()
+      const tasks = this.weekTasksMap.get(key)
+      
+      const start = firstDayOfTheWeek.date.getDate()
+      const end = new Date(
+        firstDayOfTheWeek.date.getFullYear(),
+        firstDayOfTheWeek.date.getMonth(),
+        firstDayOfTheWeek.date.getDate() + 6
+      ).getDate()
+
+      if (tasks) {
+        this.tasksByWeeks.push({ start, end, tasks })
+      } else {
+        this.tasksByWeeks.push({ start, end, tasks: [] })
       }
     }
   }
@@ -97,7 +139,7 @@ export class MonthlyPlanningComponent {
         this.generalListOfTasks = result;
         this.filtredListOfTasks = result; //filtr
 
-        console.table(this.generalListOfTasks);
+        // console.table(this.generalListOfTasks);
         
         this.sortViewTasks();
       },
@@ -129,6 +171,9 @@ export class MonthlyPlanningComponent {
     this.monthName = this.formatMonthView()
     
     this.daysOfMonthWeek = this.generateMonth.getMonth(this.year, this.month);
+    
+    this.taskByDate.date = new Date(this.year, this.month+1);
+    this.fetchMonth();
   }
 
 
@@ -140,6 +185,7 @@ export class MonthlyPlanningComponent {
   openDialog(): void {
     //let dateForForm = date;
     
+    console.log("[monthly] ", this.taskFromDialog);
     const dialogRef = this.dialog.open
     (MonthlyPlanningDialogComponent, {
       data: this.taskFromDialog,
@@ -147,30 +193,34 @@ export class MonthlyPlanningComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if(!result){ //fine?
+        this.taskFromDialog = new Task;
+        this.taskFromDialog.tag = null;
         return;
       }
+      
       this.taskFromDialog = result; 
-      console.log("taskFromDialog ", this.taskFromDialog);
+      // console.log("taskFromDialog ", this.taskFromDialog);
       
-    //view new task
-      
-      for (const day of this.daysOfMonthWeek.flat(2)) {
-        if (day.date.getTime() == new Date(this.taskFromDialog.beginDate!).getTime()) {
-          day.listOfTasks.push(this.taskFromDialog);
-          
-          break;
-        }
+      if (this.belongsToThisMonth(this.taskFromDialog.beginDate!)) {
+        this.generalListOfTasks.push(this.taskFromDialog);
+        this.sortViewTasks()
       }
 
-      
-    });
+      this.taskFromDialog = new Task;
+      this.taskFromDialog.tag = null;
 
-    this.taskFromDialog = new Task;
-    this.taskFromDialog.tag = null;
+    });
   }
 
   static removeTime(date: Date) {
     let d = new Date(date);
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  belongsToThisMonth(date: Date) {
+    const d = new Date(date)
+    const d1 = new Date(d.getFullYear(), d.getMonth())
+    const d2 = new Date(this.year, this.month)
+    return d1.getTime() == d2.getTime()
   }
 }

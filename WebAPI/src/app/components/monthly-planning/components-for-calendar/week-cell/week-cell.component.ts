@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { NgFor } from '@angular/common';
 
@@ -21,6 +21,13 @@ export class WeekCellComponent {
   // listOfDays: Day[] = [];
   @Input()
   listOfDays!: Day[];
+  
+  @Output() sortTasks = new EventEmitter<void>();
+
+  sortViewTasks() {
+    console.log('week emit');
+    this.sortTasks.emit()
+  }
 
   // ngOnInit() : void{
   //   //get from service days for current week

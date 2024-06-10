@@ -72,3 +72,29 @@ h1, h2 {
 ::-webkit-scrollbar-button {
     display:none;
 }
+
+/* rounded corners */
+app-week-cell {
+    &:nth-of-type(1) .week {
+        & app-day-cell:nth-child(1),
+        & app-day-cell:nth-child(1) .cell {
+            border-top-left-radius: 8px;
+        }
+        & app-day-cell:nth-last-child(1),
+        & app-day-cell:nth-last-child(1) .cell {
+            border-top-right-radius: 8px;
+
+        }
+    }
+    &:nth-last-child(1) .week {
+        & app-day-cell:nth-child(1),
+        & app-day-cell:nth-child(1) .cell {
+            border-bottom-left-radius: 8px;
+        }
+        & app-day-cell:nth-last-child(1),
+        & app-day-cell:nth-last-child(1) .cell {
+            border-bottom-right-radius: 8px;
+
+        }
+    }
+}

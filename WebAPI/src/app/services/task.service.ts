@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Task } from "../models/task";
 import { TaskByDate } from "../models/taskByDate";
+import { MonthlyPlanningDialogComponent } from "../components/monthly-planning/components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component";
 
 @Injectable({
     providedIn: 'root'
@@ -17,10 +18,18 @@ import { TaskByDate } from "../models/taskByDate";
     }
   
     public postTask(task: Task) : Observable<Task>{
+      task.userId = 1; //store userId
+      task.beginDate = MonthlyPlanningDialogComponent.toISODate(task.beginDate!)
+      task.endDate = MonthlyPlanningDialogComponent.toISODate(task.endDate!)
+
       return this.http.post<Task>(`${this.url}`, task);
     }
   
     public putTask(task: Task) : Observable<Task>{
+      task.userId = 1; //store userId
+      task.beginDate = MonthlyPlanningDialogComponent.toISODate(task.beginDate!)
+      task.endDate = MonthlyPlanningDialogComponent.toISODate(task.endDate!)
+      
       return this.http.put<Task>(`${this.url}`, task)
     }
 

@@ -51,6 +51,7 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-mat
 import { StoreModule } from '@ngrx/store';
 import { tagReducer } from './store/tags/tag.reducer';
 import { TaskCellComponent } from './components/task-cell/task-cell.component';
+import { TaskEditDialogComponent } from './components/task-cell/components-for-task/task-edit-dialog/task-edit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { TaskCellComponent } from './components/task-cell/task-cell.component';
     TagEditDialogComponent,
     MonthPickerComponent,
     TaskCellComponent,
+    TaskEditDialogComponent,
   ],
   imports: [
     BrowserModule,
