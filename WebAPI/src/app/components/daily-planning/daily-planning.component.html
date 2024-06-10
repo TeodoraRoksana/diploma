@@ -4,8 +4,20 @@
     <div class="view">
         <div class="calendar-notes">
             <div class="calendar block">
+                <div class="calendarButtons">
+                    <h2 class="name-of-month">{{formatMonthView()}}</h2>
+                    <div class="navigateForMonth">
+                        <button mat-stroked-button (click)="nextMonth(-1)">
+                            <mat-icon>keyboard_arrow_left</mat-icon>
+                        </button>
+                        <a (click)="today()">Today</a>
+                        <button mat-stroked-button (click)="nextMonth(1)">
+                            <mat-icon>keyboard_arrow_right</mat-icon>
+                        </button>
+                    </div>
+                </div>
                 <div class="week" *ngFor="let week of calendar">
-                    <div class="day {{day.greyed ? 'greyed' : ''}}" *ngFor="let day of week">
+                    <div class="day {{day.greyed ? 'greyed' : ''}} {{removeTime(day.date).getTime() == removeTime(now()).getTime() ? 'today' : ''}}" *ngFor="let day of week">
                         {{day.date.getDate()}}
                     </div>
                 </div>

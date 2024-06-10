@@ -45,7 +45,6 @@
 
 .calendar {
     width: 300px;
-    height: 300px;
 }
 .notes, .todo {
     height: 100%;
@@ -108,8 +107,57 @@ textarea {
         color: #aaa;
     }
 
+    &.today {
+        box-shadow: 0 0 0 2px var(--button-hovering-color);
+    }
+
     &:hover {
         background: #1f7efb;
         color: white;
     }
+}
+
+.name-of-month{
+    text-align: right;
+    margin: 0;
+    width: 100%;
+    font-size: 20px;
+}
+
+.calendarButtons{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+
+    width: 100%;
+    justify-content: flex-end;
+
+    padding-bottom: 10px;
+}
+
+.navigateForMonth{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.mdc-button {
+    min-width: auto;
+    padding: 0;
+    margin: 0;
+    aspect-ratio: 1 /1 ;
+    background: white;
+}
+
+.mat-mdc-outlined-button>.mat-icon {
+    margin: 0;
+    vertical-align: middle;
+    color: var(--text-color);
+}
+
+a{
+    /* font-weight: bold; */
+    cursor: pointer;
+    user-select: none;
 }

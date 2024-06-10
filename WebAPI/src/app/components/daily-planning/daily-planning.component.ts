@@ -27,15 +27,40 @@ import { GenerateMonth } from 'src/app/services/generate-month.service';
 })
 
 export class DailyPlanningComponent {
-  @Input()  
-  dayData! : Day;
+  @Input() dayData! : Day;
+  currentDate = this.now()
 
   mode: string = 'day';
   taskFromDialog = new Task;
 
-  calendar: Day[][] = this.generateMonth.getMonth(new Date().getFullYear(), new Date().getMonth());
+  calendar: Day[][] = this.generateMonth.getMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
 
   constructor(public dialog: MatDialog, private generateMonth: GenerateMonth) {}
+
+  nextMonth(dir: number) {
+    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + dir)
+    this.calendar = this.generateMonth.getMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+  }
+
+  today() {
+    this.currentDate = this.now()
+    this.calendar = this.generateMonth.getMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+  }
+
+  now() {
+    return new Date(Date.now())
+  }
+
+  formatMonthView() {
+    const nowY = this.now().getFullYear()
+    const y = this.currentDate.getFullYear()
+    return this.currentDate.toLocaleString('en-US', { month: 'short' }) + ' ' + (y == nowY ? '' : y)
+  }
+
+  removeTime(date: Date) {
+    let d = new Date(date);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
 
   openDialog(/*date: Date*/): void {
     //let dateForForm = date;
