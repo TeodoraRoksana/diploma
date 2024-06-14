@@ -1,3 +1,5 @@
 <div (click)="openDialogEditTask(task)" class="task" [style]="{backgroundColor: taskColor, color: (colorBlack(taskColor)?'var(--text-color) !important':'white !important')}">
-    {{task.name}}
+    <mat-icon style="color: khaki !important;" *ngIf="task.important">star</mat-icon>
+    <mat-icon *ngIf="task.important">star_border</mat-icon>
+    <span class="{{task.important ? 'important' : '' }}">{{task.name}}</span>
 </div>

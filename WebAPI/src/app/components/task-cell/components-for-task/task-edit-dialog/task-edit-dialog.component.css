@@ -79,3 +79,9 @@ mat-hint, mat-error{
         font-size: 1em;
     }
 }
+
+.delete{
+    position: absolute;
+    top: 10px;
+    left: 20px;
+}

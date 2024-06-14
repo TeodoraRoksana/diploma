@@ -1,0 +1,13 @@
+.messege{
+    width: 200px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+delete{
+    background: rgb(234, 67, 100);
+    color: white;
+}

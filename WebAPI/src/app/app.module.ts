@@ -53,6 +53,7 @@ import { tagReducer } from './store/tags/tag.reducer';
 import { TaskCellComponent } from './components/task-cell/task-cell.component';
 import { TaskEditDialogComponent } from './components/task-cell/components-for-task/task-edit-dialog/task-edit-dialog.component';
 import { WeeklyPlanningComponent } from './components/weekly-planning/weekly-planning.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { WeeklyPlanningComponent } from './components/weekly-planning/weekly-pla
     TaskCellComponent,
     TaskEditDialogComponent,
     WeeklyPlanningComponent,
+    DialogComponent,
   ],
   imports: [
     BrowserModule,

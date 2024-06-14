@@ -36,7 +36,7 @@ export class TagDialogComponent {
         .some(control => control.invalid))
         return;
 
-        this.tag.usersId = 1; //add selector user id
+        this.tag.usersId = 3; //add selector user id
         this.tagService
         .postTag(this.tag)
         .subscribe({

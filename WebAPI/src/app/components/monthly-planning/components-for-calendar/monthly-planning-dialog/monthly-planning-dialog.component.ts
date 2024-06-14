@@ -163,6 +163,7 @@ export class MonthlyPlanningDialogComponent {
       this.modeFormControl.setValue(taskData.mode);
       this.dateStartInWeekFormControl.setValue(taskData.beginDate);
       this.dateEndInWeekFormControl.setValue(taskData.endDate);
+      //this.dateStartFormControl.setValue(taskData.beginDate);
       
   }
 
@@ -183,9 +184,9 @@ export class MonthlyPlanningDialogComponent {
       
       )
       return;
-      this.taskData.userId = 1; //store userId
-      this.taskData.beginDate! = MonthlyPlanningDialogComponent.toISODate(this.taskData.beginDate!)
-      this.taskData.endDate = MonthlyPlanningDialogComponent.toISODate(this.taskData.endDate!)
+      // this.taskData.userId = 1; //store userId
+      // this.taskData.beginDate! = MonthlyPlanningDialogComponent.toISODate(this.taskData.beginDate!)
+      // this.taskData.endDate = MonthlyPlanningDialogComponent.toISODate(this.taskData.endDate!)
 
       this.taskService
       .postTask(this.taskData)

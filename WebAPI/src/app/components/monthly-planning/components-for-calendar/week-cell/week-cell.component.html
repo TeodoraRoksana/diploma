@@ -1,3 +1,3 @@
 <div class="week">
-    <app-day-cell (sortTasks)="sortViewTasks()" *ngFor="let day of listOfDays" [dayData]="day"></app-day-cell>
+    <app-day-cell (newTask)="newTaskFromDay($event)" (sortTasks)="sortViewTasks()" *ngFor="let day of listOfDays" [dayData]="day"></app-day-cell>
 </div>

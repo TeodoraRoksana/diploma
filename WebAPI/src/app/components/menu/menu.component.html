@@ -7,7 +7,7 @@
             <mat-tab label="Planning">
                 <button mat-menu-item (click)="showHidePlanningTree()">
                     <span>Planning</span>
-                    <mat-icon class="tree-icon">keyboard_arrow_down</mat-icon>
+                    <mat-icon class="tree-icon">{{showPlanningTree ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}</mat-icon>
                 </button>
                 <div class="tree-planning" *ngIf="showPlanningTree">
                     <button mat-menu-item (click)="redirect('monthly-planning')">
@@ -23,20 +23,20 @@
 
                 <button class="filters" mat-menu-item (click)="showHideFiltersTree()">
                     <span>Filters</span>
-                    <mat-icon class="tree-icon">keyboard_arrow_down</mat-icon>
+                    <mat-icon class="tree-icon">{{showFilterTree ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}</mat-icon>
                 </button>
                 <div class="tree-filters" *ngIf="showFilterTree">
-                    <button  mat-menu-item >
+                    <!-- <button  mat-menu-item >
                         <mat-icon [style]="{backgroundColor: '#ffffff', color: 'var(--text-color) !important'}" class="filter-add">add</mat-icon>
                         <span>No tag</span>
-                    </button>
-                    <div class="tag-button" *ngFor="let tag of listOfTags">
+                    </button> -->
+                    <div class="tag-button" *ngFor="let tag of listOfTagsWithFlags" (click)="tag.isSelected = !tag.isSelected; sortViewTasks()">
                         <button  mat-menu-item >
-                            <mat-icon [style]="{backgroundColor: tag.color, color: (colorBlack(tag.color)?'var(--text-color) !important':'white !important')}" class="filter-add">add</mat-icon>
-                            <span>{{tag.name}}</span>
+                            <mat-icon [style]="{backgroundColor: tag.tag.color, color: colorBlack(tag.tag.color)? 'var(--text-color) !important' : 'white !important'}" class="filter-add">{{tag.isSelected ? 'remove' : 'add'}}</mat-icon>
+                            <span>{{tag.tag.name}}</span>
                         </button>
 
-                        <button (click)="openDialogEditTag(tag)" mat-icon-button class="filter-edit">
+                        <button (click)="openDialogEditTag($event, tag.tag)" *ngIf="tag.tag.id != -1"  mat-icon-button class="filter-edit">
                             <mat-icon>create</mat-icon>
                         </button>
                     </div>
@@ -45,6 +45,10 @@
                         <span>+ new tag..</span>
                     </button>
                 </div>
+
+            <button mat-icon-button class="logout">
+                <mat-icon>logout</mat-icon>
+            </button>
 
             </mat-tab>
             <!-- <mat-tab label="Pages">

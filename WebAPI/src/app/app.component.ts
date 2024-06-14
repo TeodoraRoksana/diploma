@@ -19,7 +19,7 @@ export class AppComponent {
   ){
 
     tagService
-    .getTagByUserId(1) //store userId
+    .getTagByUserId(3) //store userId
     .subscribe({
       next: (tags: Tag[]) => {
         this.store.dispatch(setListOfTags({ tags }));

@@ -8,6 +8,7 @@ import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angula
 import { Task } from 'src/app/models/task';
 import { Day } from 'src/app/models/day';
 import { MonthlyPlanningDialogComponent } from '../monthly-planning-dialog/monthly-planning-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-day-cell',
@@ -28,15 +29,27 @@ export class DayCellComponent {
   dayData! : Day;
   
   @Output() sortTasks = new EventEmitter<void>();
+  @Output() newTask = new EventEmitter<Task>();
 
   mode:string = 'day';
   taskFromDialog = new Task();
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog,
+    private router: Router
+  ) {}
 
   sortViewTasks(){
     console.log('day emit');
     this.sortTasks.emit()
+  }
+  
+  removeTime(date: Date) {
+    let d = new Date(date);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  now() {
+    return new Date(Date.now())
   }
 
   openDialog(/*date: Date*/): void {
@@ -53,14 +66,13 @@ export class DayCellComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed');
       if(result == null){
         this.taskFromDialog = new Task();
         this.taskFromDialog.tag = null;
         return;
       }
 
-      this.dayData.listOfTasks.push(result);
+      this.newTask.emit(result);
       this.taskFromDialog = new Task();
       this.taskFromDialog.tag = null;
     
@@ -68,5 +80,7 @@ export class DayCellComponent {
     });
   }
   
-  
+  routeToDay(date: Date){
+    this.router.navigate(['daily-planning/' + date.toISOString()]);
+  }
 }

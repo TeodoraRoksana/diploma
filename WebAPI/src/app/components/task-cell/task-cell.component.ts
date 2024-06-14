@@ -17,7 +17,7 @@ export class TaskCellComponent {
   @Input() task!: Task;
   @Input() refreshPageFunctoin!: Function
   
-  @Output() sortTasks = new EventEmitter<void>();
+  @Output() sortTasks = new EventEmitter<number>();
 
   oldDate!: Date | null;
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
@@ -15,6 +15,7 @@ import { selectTags, selectTagsFromStore } from 'src/app/store/tags/tag.selector
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppState } from 'src/app/store/app.state';
 import { setListOfTags } from 'src/app/store/tags/tag.actions';
+import { TagForMenu } from 'src/app/models/tagForMenu';
 
 @Component({
   selector: 'app-menu',
@@ -33,6 +34,9 @@ import { setListOfTags } from 'src/app/store/tags/tag.actions';
   // ],
 })
 export class MenuComponent {
+  @Output() sortTasks = new EventEmitter<TagForMenu[]>();
+  listTagsForFilter: Tag[] = [];
+
   showPlanningTree = true;
   showFilterTree = true;
 
@@ -40,6 +44,7 @@ export class MenuComponent {
   nameOfMonth = this.currentMonth.getMonth();
 
   listOfTags = new Array<Tag>();
+  listOfTagsWithFlags: TagForMenu[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -50,13 +55,56 @@ export class MenuComponent {
     store.select(selectTagsFromStore)
     .subscribe({
       next: (result: Tag[]) => {
-        this.listOfTags = JSON.parse(JSON.stringify(result))
+        this.listOfTags = JSON.parse(JSON.stringify(result));
+        this.convertTags();
         //result.forEach(t => this.listOfTags.push(Object.assign({}, t)));
       },
       error: ({ error, message, status } : HttpErrorResponse) => {
         console.log('Tag get from store error:', error);
       }
     });
+  }
+
+  convertTags(){
+    const noTag = new Tag()
+    noTag.id = -1
+    noTag.name = 'No Tag'
+    noTag.usersId = 1
+
+    const isSelected = false
+
+    this.listOfTagsWithFlags = [{ tag: noTag, isSelected }].concat(this.listOfTags.map(tag => ({ tag, isSelected })))
+  }
+
+  sortViewTasks(){
+    console.log('menu emit');
+    this.sortTasks.emit(this.listOfTagsWithFlags.filter(t => t.isSelected));
+  }
+
+  addTagForFilter(tag: Tag, noTag?:string){
+    if(noTag){
+      let t = new Tag();
+      t.id = -1;
+      this.listTagsForFilter.push(t);
+      this.sortViewTasks();
+    }
+    else{
+      this.listTagsForFilter.push(tag);
+      this.sortViewTasks();
+    }
+  }
+
+  removeTagForFilter(tag: Tag, noTag?:string){
+    let id = noTag ? -1 : tag.id;
+
+    for(let i = 0; i < this.listOfTags.length; i++){
+      if(this.listOfTags[i].id == id){
+        this.listOfTags.splice(i, 1);
+        break;
+      }
+    }
+
+    this.sortViewTasks();
   }
 
   showHidePlanningTree(){
@@ -82,7 +130,8 @@ export class MenuComponent {
     });
   }
 
-  openDialogEditTag(tag: Tag){
+  openDialogEditTag($event: Event, tag: Tag){
+    $event.stopPropagation()
     const dialogRef = this.dialog.open
     (TagEditDialogComponent, {
       data: tag,

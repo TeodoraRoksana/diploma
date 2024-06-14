@@ -1,4 +1,4 @@
-<app-menu></app-menu>
+<app-menu (sortTasks)="filter($event)"></app-menu>
 
 <div class="weekly">
     <div class="calendar">
@@ -20,7 +20,7 @@
         <div class="name-week-days">
             <div *ngFor="let name of listOfNames">{{name}}</div>
         </div>
-        <app-week-cell (sortTasks)="processTasksToDays()" [listOfDays]="days"></app-week-cell>
+        <app-week-cell (newTask)="newTaskFromDay($event)" (sortTasks)="filterByTags()" [listOfDays]="days"></app-week-cell>
     </div>
     <div class="forWeek side-col">
         <h2>This Week</h2>
@@ -29,8 +29,8 @@
                 <mat-icon>add</mat-icon>
             </button>
             <div class="week">
-                <app-task-cell (sortTasks)="processTasksToDays()" class="task" *ngFor="let task of weekTasks" [task]="task"
-                    [refreshPageFunctoin]="fetchWeek"></app-task-cell>
+                <app-task-cell (sortTasks)="filterByTags()" class="task" *ngFor="let task of weekTasks" [task]="task"
+                    ></app-task-cell>
             </div>
         </div>
     </div>

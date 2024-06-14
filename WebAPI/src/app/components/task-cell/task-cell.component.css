@@ -10,4 +10,17 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    position: relative;
+
+    & span.important{
+        position: relative;
+        left: 16px;
+    }
+}
+
+mat-icon{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 2px;
 }

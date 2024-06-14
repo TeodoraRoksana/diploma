@@ -1,16 +1,16 @@
-<app-menu></app-menu>
+<app-menu (sortTasks)="filter($event)"></app-menu>
 
 <div class="monthly">
     <div class="side-col">
         <h2>This Month</h2>
         
         <div class="month">
-            <button mat-icon-button class="add-week-task" (click)="openDialog('month')">
+            <button mat-icon-button class="add-week-task" (click)="openDialog('month', currentDate, currentDate)">
                 <mat-icon>add</mat-icon>
             </button>
             <div>
                 <div class="tasks">
-                    <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of monthTasks" [task]="task"
+                    <app-task-cell (sortTasks)="filterByTags()" class="task" *ngFor="let task of monthTasks" [task]="task"
                         [refreshPageFunctoin]="fetchMonth"></app-task-cell>
                 </div>
             </div>
@@ -35,7 +35,7 @@
         <div class="name-week-days">
             <div *ngFor="let name of listOfNames">{{name}}</div>
         </div>
-        <app-week-cell (sortTasks)="sortViewTasks()" *ngFor="let week of daysOfMonthWeek"
+        <app-week-cell (newTask)="newTaskFromDay($event)" (sortTasks)="filterByTags()" *ngFor="let week of daysOfMonthWeek"
             [listOfDays]="week"></app-week-cell>
     </div>
     <div class="weeks side-col">
@@ -44,7 +44,7 @@
             <div class="week" *ngFor="let week of tasksByWeeks">
                 <div class="week-controls">
                     <p>
-                        <span>{{week.start.getDate()}}-{{week.end.getDate()}}</span>
+                        <span (click)="routeToWeek(week.start)">{{week.start.getDate()}}-{{week.end.getDate()}}</span>
                     </p>
                     <button mat-icon-button class="add-week-task" (click)="openDialog('week', week.start, week.end)">
                         <mat-icon>add</mat-icon>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="tasks">
-                    <app-task-cell (sortTasks)="sortViewTasks()" class="task" *ngFor="let task of week.tasks"
+                    <app-task-cell (sortTasks)="filterByTags()" class="task" *ngFor="let task of week.tasks"
                         [task]="task" [refreshPageFunctoin]="fetchMonth"></app-task-cell>
                 </div>
             </div>

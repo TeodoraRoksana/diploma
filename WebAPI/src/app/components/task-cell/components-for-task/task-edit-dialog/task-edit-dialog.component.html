@@ -44,13 +44,13 @@
         <mat-form-field *ngIf="currentTask.mode == 'week'">
           <mat-label>Choose date range</mat-label>
           <mat-date-range-input [rangePicker]="picker">
-            <input [formControl]="dateStartFormControl" [(ngModel)]="currentTask.beginDate" matStartDate
+            <input [formControl]="dateStartInWeekFormControl" [(ngModel)]="currentTask.beginDate" matStartDate
               placeholder="Start date">
-            <input [formControl]="dateStartFormControl" [(ngModel)]="currentTask.endDate" matEndDate placeholder="End date">
+            <input [formControl]="dateEndInWeekFormControl" [(ngModel)]="currentTask.endDate" matEndDate placeholder="End date">
           </mat-date-range-input>
           <mat-hint></mat-hint>
-          <mat-error *ngIf="dateStartFormControl.hasError('required')">
-            Select week
+        <mat-error *ngIf="dateStartInWeekFormControl.hasError('required') || dateEndInWeekFormControl.hasError('required')">
+          Select week
           </mat-error>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
@@ -90,5 +90,8 @@
     <button class="important" mat-icon-button (click)="currentTask.important = !currentTask.important">
       <mat-icon *ngIf="!currentTask.important">star_border</mat-icon>
       <mat-icon style="color: khaki !important;" *ngIf="currentTask.important">star</mat-icon>
+    </button>
+    <button class="delete" mat-icon-button (click)="delete()">
+      <mat-icon style="color: rgb(253, 92, 92) !important;">delete_outline</mat-icon>
     </button>
   </div>

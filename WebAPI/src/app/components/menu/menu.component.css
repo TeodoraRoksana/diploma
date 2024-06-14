@@ -30,7 +30,7 @@ h1{
 }
 
 .tree-filters{
-    max-height: 150px;
+    max-height: calc(100% - 7 * 48px - 8px);
     overflow: auto;
 }
 
@@ -39,10 +39,9 @@ h1{
 }
 
 .filter-add{
-    font-size: 18px;
-    
-    box-shadow: 0 0 4px var(--border-color);
-    border-radius: 8px;
+    font-size: 18px;    
+    box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px var(--border-color);
+    border-radius: 10px;
     /* height: 20px; */
     display: flex;
     justify-content: center;
@@ -61,6 +60,12 @@ h1{
     &:hover .filter-edit{
         opacity: 1;
     }
+
+    & .mat-mdc-menu-item-text {
+        max-width: 100px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 
 .filter-edit{
@@ -75,4 +80,11 @@ h1{
     &:hover{
         background: rgba(0, 0, 0, .04);
     }
+}
+
+.logout {
+    color: var(--border-error-color);
+    position: absolute;
+    right: 8px;
+    bottom: 0;
 }

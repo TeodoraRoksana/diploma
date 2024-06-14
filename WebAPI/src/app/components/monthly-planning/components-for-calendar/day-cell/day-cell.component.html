@@ -1,6 +1,6 @@
-<div class="cell {{dayData.greyed ? 'greyed' : ''}}">
+<div class="cell {{dayData.greyed ? 'greyed' : ''}} {{removeTime(dayData.date).getTime() == removeTime(now()).getTime() ? 'today' : ''}}">
     <p>
-        <span>
+        <span (click)="routeToDay(dayData.date)">
             {{dayData.date.getDate()}}
         </span>
     </p>

@@ -13,6 +13,8 @@ import { GenerateMonth } from 'src/app/services/generate-month.service';
 import { TaskService } from 'src/app/services/task.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskByDate } from 'src/app/models/taskByDate';
+import { Router } from '@angular/router';
+import { TagForMenu } from 'src/app/models/tagForMenu';
 
 @Component({
   selector: 'app-monthly-planning',
@@ -26,6 +28,8 @@ import { TaskByDate } from 'src/app/models/taskByDate';
 export class MonthlyPlanningComponent {
   generalListOfTasks: Task[] = [];
   filtredListOfTasks: Task[] = [];
+
+  localListOfTags: TagForMenu[] = [];
 
   monthTasks: Task[] = [];
   weekTasks: Task[] = [];
@@ -55,7 +59,8 @@ export class MonthlyPlanningComponent {
 
   constructor(public dialog: MatDialog, 
     private generateMonth : GenerateMonth, 
-    private taskService:TaskService
+    private taskService:TaskService,
+    private router: Router,
   ) {}
 
   ngOnInit() : void{
@@ -70,10 +75,23 @@ export class MonthlyPlanningComponent {
 
   }
 
+  isImportant(){
+    this.filtredListOfTasks.sort((a, b) => {
+      if(a.important && !b.important) 
+        return -1;
+      else if(!a.important && b.important)
+        return 1;
+
+      return 0;
+    })
+  }
+
   sortViewTasks(){
     console.log('month call');
 
-    this.filtredListOfTasks = this.generalListOfTasks
+    //this.filtredListOfTasks = this.generalListOfTasks
+    
+    
 
     this.monthTasks = this.filtredListOfTasks.filter(t => t.mode == "month" && this.belongsToThisMonth(t.beginDate!));
     this.weekTasks = this.filtredListOfTasks.filter(t => t.mode == "week" && (this.belongsToThisMonth(t.beginDate!) || this.belongsToThisMonth(t.endDate!)));
@@ -141,7 +159,9 @@ export class MonthlyPlanningComponent {
 
         // console.table(this.generalListOfTasks);
         
-        this.sortViewTasks();
+        //this.sortViewTasks();
+        this.filterByTags();
+
       },
       error: ({ error, message, status } : HttpErrorResponse) => {
         console.log('Unknown error:', error);
@@ -158,8 +178,6 @@ export class MonthlyPlanningComponent {
     
     this.daysOfMonthWeek = this.generateMonth.getMonth(this.year, this.month);
 
-    console.log("this.currentDate ", this.currentDate);
-    
     this.taskByDate.date = new Date(this.year, this.month+1);
     this.fetchMonth();
   }
@@ -202,15 +220,13 @@ export class MonthlyPlanningComponent {
       }
       
       this.taskFromDialog = result; 
-      // console.log("taskFromDialog ", this.taskFromDialog);
       
       if (this.belongsToThisMonth(this.taskFromDialog.beginDate!) || this.belongsToThisMonth(this.taskFromDialog.endDate!)) {
         this.generalListOfTasks.push(this.taskFromDialog);
-        
-        this.sortViewTasks()
+        this.filterByTags();
+        //this.sortViewTasks()
       }
 
-      console.log(this.generalListOfTasks);
 
       this.taskFromDialog = new Task();
       this.taskFromDialog.tag = null;
@@ -228,5 +244,50 @@ export class MonthlyPlanningComponent {
     const d1 = new Date(d.getFullYear(), d.getMonth())
     const d2 = new Date(this.year, this.month)
     return d1.getTime() == d2.getTime()
+  }
+
+  
+  routeToWeek(date: Date){
+    this.router.navigate(['weekly-planning/' + date.toISOString()]);
+  }
+
+  filter(listOfTags: TagForMenu[]){
+    this.localListOfTags = listOfTags;
+    this.filterByTags();
+  }
+
+  filterByTags(){
+    // if(id){
+    //   for(let i = 0; i < this.generalListOfTasks.length; i++){
+    //     if(this.generalListOfTasks[i].id == id){
+    //       this.generalListOfTasks.splice(i, 1);
+    //       break;
+    //     }
+    //   }
+    // }
+
+    if(!this.localListOfTags.length){
+      this.filtredListOfTasks = this.generalListOfTasks;
+      this.isImportant();
+      this.sortViewTasks();
+      return;
+    }
+      
+
+    const tags = this.localListOfTags.map(({tag}) => tag.id)
+    const noTagSelected = tags.some(id => id == -1)
+
+    this.filtredListOfTasks = this.generalListOfTasks.filter(({ tag }) => {
+      if (tags.some(id => id == tag?.id)) return true
+      if (noTagSelected && tag == null) return true
+      return false
+    })
+    this.isImportant();
+    this.sortViewTasks()
+  }
+
+  newTaskFromDay(newTask: Task){
+    this.generalListOfTasks.push(newTask);
+    this.filterByTags();
   }
 }

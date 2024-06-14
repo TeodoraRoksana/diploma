@@ -4,6 +4,7 @@ import { NgFor } from '@angular/common';
 
 import { DayCellComponent } from '../day-cell/day-cell.component';
 import { Day } from 'src/app/models/day';
+import { Task } from 'src/app/models/task';
 
 
 @Component({
@@ -23,10 +24,15 @@ export class WeekCellComponent {
   listOfDays!: Day[];
   
   @Output() sortTasks = new EventEmitter<void>();
+  @Output() newTask = new EventEmitter<Task>();
 
   sortViewTasks() {
     console.log('week emit');
     this.sortTasks.emit()
+  }
+
+  newTaskFromDay(task: Task){
+    this.newTask.emit(task);
   }
 
   // ngOnInit() : void{

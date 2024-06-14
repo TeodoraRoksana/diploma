@@ -32,6 +32,10 @@ h1, h2 {
     font-weight: normal;
 }
 
+.mat-mdc-tab-label-container {
+    display: none !important;
+}
+
 .mat-mdc-menu-panel{
     max-width: none !important;
     background-color: var(--button-color) !important;
@@ -39,7 +43,7 @@ h1, h2 {
 }
 
 .mat-mdc-tab-body-content {
-    height: 500px !important;
+    height: 550px !important;
     width: 250px !important;
     overflow: hidden !important;
 }

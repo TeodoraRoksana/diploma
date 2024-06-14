@@ -14,11 +14,11 @@ import { MonthlyPlanningDialogComponent } from "../components/monthly-planning/c
     constructor(private http: HttpClient) { }
   
     public getTaskByUserId(userId: number) : Observable<Task[]>{
-      return this.http.get<Task[]>(`${this.url}` + '?user_id=' + userId); // change
+      return this.http.get<Task[]>(`${this.url}` + '?user_id=' + 3); // change
     }
   
     public postTask(task: Task) : Observable<Task>{
-      task.userId = 1; //store userId
+      task.userId = 3; //store userId
       task.beginDate = MonthlyPlanningDialogComponent.toISODate(task.beginDate!)
       task.endDate = MonthlyPlanningDialogComponent.toISODate(task.endDate!)
 
@@ -26,7 +26,7 @@ import { MonthlyPlanningDialogComponent } from "../components/monthly-planning/c
     }
   
     public putTask(task: Task) : Observable<Task>{
-      task.userId = 1; //store userId
+      task.userId = 3; //store userId
       task.beginDate = MonthlyPlanningDialogComponent.toISODate(task.beginDate!)
       task.endDate = MonthlyPlanningDialogComponent.toISODate(task.endDate!)
       
@@ -38,6 +38,7 @@ import { MonthlyPlanningDialogComponent } from "../components/monthly-planning/c
     }
 
     public getTaskForCurrentPage(data: TaskByDate) : Observable<Task[]>{
+      data.user_Id = 3;
         return this.http.post<Task[]>(`${this.url}/GetTasksByDate`, data);
       }
   }

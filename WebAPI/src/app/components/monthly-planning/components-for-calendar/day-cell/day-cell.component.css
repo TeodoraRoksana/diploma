@@ -27,6 +27,10 @@
             pointer-events: none;
         }
     }
+
+    &.today p span {
+        box-shadow: 0 0 0 2px var(--button-hovering-color);
+    }
 }
 
 p{

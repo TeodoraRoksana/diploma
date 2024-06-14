@@ -67,7 +67,7 @@ a{
 .side-col {
     flex-grow: 1;
     max-width: calc((100% - 40px) / 9);
-    min-width: 100px;
+    min-width: 120px;
     display: flex;
     flex-direction: column;
 
@@ -103,7 +103,7 @@ a{
     }
 
     .tasks{
-        top: 0;
+        top: 5px;
     }
 }
 

@@ -42,6 +42,7 @@ import { Tag } from 'src/app/models/tag';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskService } from 'src/app/services/task.service';
 import { MonthlyPlanningDialogComponent } from 'src/app/components/monthly-planning/components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component';
+import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -113,6 +114,8 @@ export class TaskEditDialogComponent {
   modeFormControl = new FormControl('', [Validators.required]);
   dateStartFormControl = new FormControl(moment(), [Validators.required]);
   tagFormControl = new FormControl(new Tag(), [Validators.required]);
+  dateStartInWeekFormControl = new FormControl(new Date, [Validators.required]);
+  dateEndInWeekFormControl = new FormControl(new Date, [Validators.required]);
 
   matcher = new MyErrorStateMatcher();
 
@@ -127,7 +130,8 @@ export class TaskEditDialogComponent {
     @Inject(MAT_DIALOG_DATA) public taskData: Task,
     private _adapter: DateAdapter<any>,
     private store:Store<AppState>,
-    private taskService:TaskService
+    private taskService:TaskService,
+    public dialog: MatDialog,
     ) {}
 
   ngOnInit() {
@@ -172,9 +176,11 @@ export class TaskEditDialogComponent {
       [
         this.nameFormControl,
         this.modeFormControl,
-        this.dateStartFormControl
       ]
-      .some(control => control.invalid)
+      .some(control => control.invalid) || 
+        this.dateStartFormControl.invalid &&
+        (this.dateStartInWeekFormControl.invalid ||
+        this.dateEndInWeekFormControl.invalid)
       )
       return;
       // this.taskData.userId = 1; //store userId
@@ -199,5 +205,25 @@ export class TaskEditDialogComponent {
 
   onSelectedDateMode(){
     this.dateStartFormControl.setValue(null);
+    this.dateEndInWeekFormControl.setValue(null);
+    this.dateStartInWeekFormControl.setValue(null);
+  }
+
+  delete(){
+    const dialogRef = this.dialog.open
+    (DialogComponent, {
+      data: "Are you sure?",
+    });
+    
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if(!result){ //fine?
+        return;
+      }
+      //this.taskFromDialog = result; 
+      this.taskService.deleteTask(this.taskData.id);
+      this.dialogRef.close('delete');
+      }
+    );
   }
 }

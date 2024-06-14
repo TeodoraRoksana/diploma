@@ -82,6 +82,7 @@ export class LogInComponent {
     .subscribe({
       next: (result: UserLogIn) => {
         this.resultLogIn = result;
+        this.router.navigate(['/monthly-planning']);
       },
       error: ({ error, message, status } : HttpErrorResponse) => {
         if (error == errorData.UserEmailNotFound) {

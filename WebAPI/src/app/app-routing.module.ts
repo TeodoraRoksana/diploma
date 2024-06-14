@@ -12,11 +12,14 @@ const routes: Routes = [
   {path: 'registration', component:RegistrationComponent},
   {path: 'monthly-planning', component:MonthlyPlanningComponent},
   {path: 'weekly-planning', component:WeeklyPlanningComponent},
+  {path: 'weekly-planning/:currentDate', component:WeeklyPlanningComponent},
+  {path: 'daily-planning/:currentDate', component:DailyPlanningComponent},
   {path: 'daily-planning', component:DailyPlanningComponent},
+  
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {bindToComponentInputs: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

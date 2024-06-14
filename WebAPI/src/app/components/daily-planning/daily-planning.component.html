@@ -1,4 +1,4 @@
-<app-menu></app-menu>
+<app-menu (sortTasks)="filter($event)"></app-menu>
 
 <div class="day-view">
     <div class="view">
@@ -17,7 +17,12 @@
                     </div>
                 </div>
                 <div class="week" *ngFor="let week of calendar">
-                    <div class="day {{day.greyed ? 'greyed' : ''}} {{removeTime(day.date).getTime() == removeTime(now()).getTime() ? 'today' : ''}}" *ngFor="let day of week">
+                    <div class="
+                        day
+                        {{day.greyed ? 'greyed' : ''}}
+                        {{removeTime(day.date).getTime() == removeTime(now()).getTime() ? 'today' : ''}}
+                        {{removeTime(day.date).getTime() == removeTime(dayData.date).getTime() ? 'current' : ''}}
+                    " *ngFor="let day of week" (click)="routeToDay(day.date)">
                         {{day.date.getDate()}}
                     </div>
                 </div>
@@ -30,6 +35,11 @@
             <button mat-icon-button (click)="openDialog()">
                 <mat-icon>add</mat-icon>
             </button>
+            <div class="currentDate">{{formatDateView()}}</div>
+            <div class="tasks">
+                <app-task-cell class="task" *ngFor="let task of filteredListOfTasks" [task]="task" (sortTasks)="processTasksToDay()"
+                    [refreshPageFunctoin]="fetchDay"></app-task-cell>
+            </div>
         </div>
     </div>
 </div>

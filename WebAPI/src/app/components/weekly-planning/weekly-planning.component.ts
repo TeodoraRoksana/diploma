@@ -6,6 +6,8 @@ import { Task } from 'src/app/models/task';
 import { TaskByDate } from 'src/app/models/taskByDate';
 import { TaskService } from 'src/app/services/task.service';
 import { MonthlyPlanningDialogComponent } from '../monthly-planning/components-for-calendar/monthly-planning-dialog/monthly-planning-dialog.component';
+import { Router } from '@angular/router';
+import { TagForMenu } from 'src/app/models/tagForMenu';
 
 @Component({
   selector: 'app-weekly-planning',
@@ -24,18 +26,31 @@ export class WeeklyPlanningComponent {
 
   taskFromDialog = new Task;
 
-  @Input() currentDate = this.now();
+  @Input('currentDate') currentDate_string!:string;
+  currentDate = this.now();
+  monday!: Date;
+
+  lokalListOfTags: TagForMenu[] = [];
 
   constructor(
     public dialog: MatDialog, 
+    private router: Router,
     private taskService: TaskService
   ) {}
 
+  ngOnChanges(){
+    if(this.currentDate_string)
+      this.currentDate = new Date(this.currentDate_string)
+  }
   ngOnInit() : void{
+    
+    
+    
+
     this.generateWeek();
     this.taskFromDialog.tag = null;
 
-    this.taskByDate.user_Id = 1;
+    this.taskByDate.user_Id = 3;
     this.taskByDate.typeDate = "week";
     this.taskByDate.date = this.currentDate;
     
@@ -99,6 +114,7 @@ export class WeeklyPlanningComponent {
   }
 
   processTasksToDays() {
+
     this.weekTasks = this.filtredListOfTasks.filter(t => t.mode == "week" && this.belongsToThisWeek(t.beginDate!));
     const dayTasks = this.filtredListOfTasks.filter(t => t.mode == "day" && this.belongsToThisWeek(t.beginDate!));
 
@@ -125,7 +141,8 @@ export class WeeklyPlanningComponent {
       next: (result: Task[]) => {
         this.generalListOfTasks = result;
         this.filtredListOfTasks = result;
-        this.processTasksToDays();
+        this.filterByTags()///////////////////
+        //this.processTasksToDays();
       },
       error: ({ error, message, status } : HttpErrorResponse) => {
         console.log('Unknown error:', error);
@@ -157,6 +174,7 @@ export class WeeklyPlanningComponent {
   getThisWeeksMonday(date: Date) {
     const d = new Date(date)
     const offset = (d.getDay() - 1 + 7) % 7
+    this.monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() - offset)
     return new Date(d.getFullYear(), d.getMonth(), d.getDate() - offset)
   }
 
@@ -177,6 +195,10 @@ export class WeeklyPlanningComponent {
   }
   
   openDialog(): void {
+    this.taskFromDialog.mode = 'week';
+    this.taskFromDialog.beginDate = this.monday;
+    this.taskFromDialog.endDate = this.addDay(this.monday, 6)
+
     const dialogRef = this.dialog.open
     (MonthlyPlanningDialogComponent, {
       data: this.taskFromDialog,
@@ -191,13 +213,60 @@ export class WeeklyPlanningComponent {
       
       this.taskFromDialog = result; 
       
-      if (this.belongsToThisWeek(this.taskFromDialog.beginDate!)) {
+      if (this.belongsToThisWeek(this.taskFromDialog.beginDate! || this.belongsToThisWeek(this.taskFromDialog.endDate!))) {
         this.generalListOfTasks.push(this.taskFromDialog);
-        this.processTasksToDays()
+        this.filterByTags()
+        //this.processTasksToDays()
       }
 
       this.taskFromDialog = new Task;
       this.taskFromDialog.tag = null;
     });
   }
+
+  isImportant(){
+    this.filtredListOfTasks.sort((a, b) => {
+      if(a.important && !b.important) 
+        return -1;
+      else if(!a.important && b.important)
+        return 1;
+
+      return 0;
+    })
+  }
+
+  filter(listOfTags: TagForMenu[]){
+    this.lokalListOfTags = listOfTags;
+    this.filterByTags();
+  }
+
+  filterByTags(){
+    if(!this.lokalListOfTags.length){
+      this.filtredListOfTasks = this.generalListOfTasks;
+      this.isImportant();
+      this.processTasksToDays();
+      return;
+    }
+      
+
+    const tags = this.lokalListOfTags.map(({tag}) => tag.id)
+    const noTagSelected = tags.some(id => id == -1)
+
+    this.filtredListOfTasks = this.generalListOfTasks.filter(({ tag }) => {
+      if (tags.some(id => id == tag?.id)) return true
+      if (noTagSelected && tag == null) return true
+      return false
+    })
+    this.isImportant();
+
+    this.processTasksToDays()
+
+  }
+
+  newTaskFromDay(newTask: Task){
+    this.generalListOfTasks.push(newTask);
+    this.filterByTags();
+  }
+
 }
+

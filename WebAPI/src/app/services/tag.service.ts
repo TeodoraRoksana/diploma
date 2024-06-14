@@ -17,14 +17,16 @@ export class TagService {
   constructor(private http: HttpClient) { }
 
   public getTagByUserId(userId: number) : Observable<Tag[]>{
-    return this.http.get<Tag[]>(`${this.url}` + '?user_id=' + userId); // change
+    return this.http.get<Tag[]>(`${this.url}` + '?user_id=' + 3); // change
   }
 
   public postTag(tag: Tag) : Observable<Tag>{
+    tag.usersId = 3;
     return this.http.post<Tag>(`${this.url}`, tag);
   }
 
   public putTag(tag: Tag) : Observable<Tag>{
+    tag.usersId = 3;
     return this.http.put<Tag>(`${this.url}`, tag)
   }
 
